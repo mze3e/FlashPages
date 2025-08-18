@@ -1,0 +1,48 @@
+{% extends "layouts/base.html" %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center py-3 border-bottom">
+        <h2>File Diff: {{ file_path }}</h2>
+        <div>
+            <a href="/cms" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to CMS
+            </a>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Changes ({{ revision }} → HEAD)</h5>
+            </div>
+            <div class="card-body">
+                {% if diff_content %}
+                <pre class="diff-content"><code>{{ diff_content }}</code></pre>
+                {% else %}
+                <p class="text-muted">No changes found or file is new.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.diff-content {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    font-size: 0.875rem;
+    white-space: pre-wrap;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.diff-content code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+}
+</style>
+{% endblock %}

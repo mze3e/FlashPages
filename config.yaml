@@ -1,0 +1,21 @@
+site:
+  name: "Content CMS"
+  base_url: "http://localhost:5000"
+  theme: "flatly"  # bootswatch theme
+
+content:
+  dir: "content/pages"
+  data_dir: "content/data"
+  static_dir: "static"
+
+git:
+  repo_path: "."
+  default_branch: "main"
+  author_from_user: true
+
+auth:
+  mode: "basic"   # none|basic|oauth
+  admins: ["admin@example.com"]
+
+security:
+  csp: "default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net"

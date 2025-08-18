@@ -1,0 +1,73 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">
+            <i class="fas fa-book-open me-2"></i>
+            {{ site.name|default("Content CMS") }}
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Main Navigation -->
+            <ul class="navbar-nav me-auto">
+                {% if navigation %}
+                    {% for nav_item in navigation %}
+                        {% if nav_item.slug %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ nav_item.slug }}">{{ nav_item.title }}</a>
+                        </li>
+                        {% elif nav_item.children %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                {{ nav_item.title }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                {% for child in nav_item.children %}
+                                <li><a class="dropdown-item" href="{{ child.slug }}">{{ child.title }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </ul>
+            
+            <!-- Search Form -->
+            <form class="d-flex me-3" id="search-form">
+                <input class="form-control" type="search" placeholder="Search..." id="search-input" autocomplete="off">
+                <div id="search-results" class="position-absolute bg-white border rounded mt-5 p-2 d-none" style="z-index: 1000; width: 300px;"></div>
+            </form>
+            
+            <!-- User Menu -->
+            <ul class="navbar-nav">
+                {% if request.session.get('user') %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user me-1"></i>
+                        {{ request.session.user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="/cms"><i class="fas fa-cog me-2"></i>CMS</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form method="post" action="/auth/logout" class="d-inline">
+                                <button type="submit" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/auth/login">
+                        <i class="fas fa-sign-in-alt me-1"></i>Login
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

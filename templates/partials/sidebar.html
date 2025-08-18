@@ -1,0 +1,53 @@
+<div class="sidebar-sticky">
+    <!-- Navigation -->
+    {% if navigation %}
+    <nav class="nav flex-column">
+        {% for nav_item in navigation %}
+            {% if nav_item.slug %}
+            <a class="nav-link" href="{{ nav_item.slug }}">{{ nav_item.title }}</a>
+            {% elif nav_item.children %}
+            <div class="nav-section">
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    {{ nav_item.title }}
+                </h6>
+                {% for child in nav_item.children %}
+                <a class="nav-link ms-3" href="{{ child.slug }}">{{ child.title }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endfor %}
+    </nav>
+    {% endif %}
+    
+    <!-- Table of Contents (if available) -->
+    {% if page and page.toc %}
+    <div class="mt-4">
+        <h6 class="sidebar-heading px-3 mt-4 mb-1 text-muted">
+            On This Page
+        </h6>
+        <div class="nav flex-column">
+            {{ page.toc|safe }}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.sidebar-sticky {
+    position: sticky;
+    top: 1rem;
+    height: calc(100vh - 2rem);
+    overflow-y: auto;
+}
+
+.nav-section .nav-link {
+    padding: 0.25rem 1rem;
+    font-size: 0.9rem;
+}
+
+.sidebar-heading {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+</style>

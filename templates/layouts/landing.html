@@ -1,0 +1,71 @@
+{% extends "layouts/base.html" %}
+
+{% block body %}
+<!-- Hero Section -->
+{% if page.hero %}
+<section class="hero-section bg-primary text-white py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold">{{ page.hero.title or page.title }}</h1>
+                {% if page.hero.subtitle %}
+                <p class="lead">{{ page.hero.subtitle }}</p>
+                {% endif %}
+                {% if page.hero.cta_text and page.hero.cta_link %}
+                <a href="{{ page.hero.cta_link }}" class="btn btn-light btn-lg">{{ page.hero.cta_text }}</a>
+                {% endif %}
+            </div>
+            {% if page.hero.image %}
+            <div class="col-lg-6">
+                <img src="{{ page.hero.image }}" alt="{{ page.hero.title }}" class="img-fluid rounded">
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Main Content -->
+<div class="container">
+    {% if page.title and not page.hero %}
+    <div class="text-center mb-5">
+        <h1 class="display-5">{{ page.title }}</h1>
+        {% if page.description %}
+        <p class="lead text-muted">{{ page.description }}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+    
+    <div class="content">
+        {{ content|safe }}
+    </div>
+</div>
+
+<!-- Features Section -->
+{% if page.features %}
+<section class="features-section py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            {% for feature in page.features %}
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        {% if feature.icon %}
+                        <div class="mb-3">
+                            <i class="{{ feature.icon }} fa-3x text-primary"></i>
+                        </div>
+                        {% endif %}
+                        <h5 class="card-title">{{ feature.title }}</h5>
+                        <p class="card-text">{{ feature.description }}</p>
+                        {% if feature.link %}
+                        <a href="{{ feature.link }}" class="btn btn-outline-primary">Learn More</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

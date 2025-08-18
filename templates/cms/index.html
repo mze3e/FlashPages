@@ -1,0 +1,153 @@
+{% extends "layouts/base.html" %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/cms">
+                            <i class="fas fa-home me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cms/file?path=content/pages/index.md">
+                            <i class="fas fa-file-alt me-2"></i>Pages
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cms/logs">
+                            <i class="fas fa-history me-2"></i>History
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">CMS Dashboard</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group me-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.href='/cms/file?path=content/pages/new.md'">
+                            <i class="fas fa-plus me-1"></i>New Page
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Git Status -->
+            {% if git_status.has_changes %}
+            <div class="alert alert-warning">
+                <h6><i class="fas fa-exclamation-triangle me-2"></i>Uncommitted Changes</h6>
+                <ul class="mb-0">
+                    {% for change in git_status.changes %}
+                    <li>{{ change.status }} {{ change.file }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <div class="row">
+                <!-- Recent Pages -->
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Recent Pages</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if pages %}
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Status</th>
+                                            <th>Modified</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for page in pages %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ page.title }}</strong><br>
+                                                <small class="text-muted">{{ page.slug }}</small>
+                                            </td>
+                                            <td>
+                                                {% if page.draft %}
+                                                <span class="badge bg-secondary">Draft</span>
+                                                {% else %}
+                                                <span class="badge bg-success">Published</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ page.modified_time.strftime('%b %d, %Y') if page.modified_time }}</td>
+                                            <td>
+                                                <a href="/cms/file?path={{ page.file_path }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                                <a href="{{ page.slug }}" class="btn btn-sm btn-outline-secondary" target="_blank">View</a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <p class="text-muted">No pages found. <a href="/cms/file?path=content/pages/index.md">Create your first page</a>.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions & Info -->
+                <div class="col-lg-4">
+                    <!-- Quick Stats -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h6 class="mb-0">Quick Stats</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <h4 class="text-primary">{{ pages|length }}</h4>
+                                        <small class="text-muted">Pages</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <h4 class="text-success">{{ recent_commits|length }}</h4>
+                                        <small class="text-muted">Recent Commits</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Commits -->
+                    {% if recent_commits %}
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">Recent Activity</h6>
+                        </div>
+                        <div class="card-body">
+                            {% for commit in recent_commits %}
+                            <div class="d-flex align-items-start mb-2">
+                                <div class="bg-primary rounded-circle me-2 mt-1" style="width: 8px; height: 8px;"></div>
+                                <div class="flex-grow-1">
+                                    <small class="text-muted">{{ commit.hash[:7] }}</small><br>
+                                    <small>{{ commit.message }}</small>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}

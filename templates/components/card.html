@@ -1,0 +1,44 @@
+{% macro card(title="", body="", footer="", image=null, link=null, class="") %}
+<div class="card {{ class }}">
+    {% if image %}
+    <img src="{{ image }}" class="card-img-top" alt="{{ title }}">
+    {% endif %}
+    
+    <div class="card-body">
+        {% if title %}
+        <h5 class="card-title">{{ title }}</h5>
+        {% endif %}
+        
+        {% if body %}
+        <div class="card-text">{{ body|safe }}</div>
+        {% endif %}
+        
+        {% if link %}
+        <a href="{{ link }}" class="btn btn-primary">Read More</a>
+        {% endif %}
+    </div>
+    
+    {% if footer %}
+    <div class="card-footer text-muted">
+        {{ footer|safe }}
+    </div>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% macro card_deck(cards) %}
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for card_data in cards %}
+    <div class="col">
+        {{ card(
+            title=card_data.title,
+            body=card_data.body,
+            footer=card_data.footer,
+            image=card_data.image,
+            link=card_data.link,
+            class="h-100"
+        ) }}
+    </div>
+    {% endfor %}
+</div>
+{% endmacro %}

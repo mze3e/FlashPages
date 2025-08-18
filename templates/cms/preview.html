@@ -1,0 +1,33 @@
+{% extends "layouts/base.html" %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center py-3 border-bottom">
+        <h2>Preview</h2>
+        <div>
+            <button class="btn btn-outline-secondary" onclick="history.back()">
+                <i class="fas fa-arrow-left me-1"></i>Back
+            </button>
+        </div>
+    </div>
+
+    <div class="alert alert-info mt-3">
+        <i class="fas fa-info-circle me-2"></i>
+        This is a preview of how your content will appear. Changes are not saved yet.
+    </div>
+
+    <div class="preview-container mt-4">
+        {{ preview_html|safe }}
+    </div>
+</div>
+
+<style>
+.preview-container {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    padding: 2rem;
+    background-color: white;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+</style>
+{% endblock %}

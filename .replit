@@ -1,2 +1,31 @@
+modules = ["python-3.11"]
 [agent]
 expertMode = true
+
+[nix]
+channel = "stable-25_05"
+packages = ["libxcrypt", "libyaml"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Content CMS Server"
+
+[[workflows.workflow]]
+name = "Content CMS Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pip install fastapi uvicorn jinja2 pyyaml python-markdown bleach pygments starlette python-multipart && python main.py"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"

@@ -1,0 +1,42 @@
+# Team member data for use in templates
+members:
+  - name: "Jane Smith"
+    role: "Content Manager"
+    bio: "Passionate about creating engaging content and user experiences."
+    image: "/static/img/team/jane.jpg"
+    social:
+      twitter: "@janesmith"
+      linkedin: "jane-smith"
+  
+  - name: "John Doe"
+    role: "Developer"
+    bio: "Full-stack developer with expertise in Python and web technologies."
+    image: "/static/img/team/john.jpg"
+    social:
+      github: "johndoe"
+      twitter: "@johndoe"
+
+  - name: "Alice Johnson"
+    role: "Designer"
+    bio: "Creative designer focused on user-centered design and accessibility."
+    image: "/static/img/team/alice.jpg"
+    social:
+      behance: "alicejohnson"
+      twitter: "@alicedesign"
+
+# Site-wide configuration data
+site_config:
+  contact_email: "hello@example.com"
+  social_links:
+    twitter: "https://twitter.com/yoursite"
+    github: "https://github.com/yourrepo"
+    linkedin: "https://linkedin.com/company/yourcompany"
+
+# Navigation sections
+nav_sections:
+  - name: "Documentation"
+    description: "Learn how to use the system"
+  - name: "Guides"
+    description: "Step-by-step tutorials"
+  - name: "API"
+    description: "Technical reference"

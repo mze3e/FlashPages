@@ -1,0 +1,27 @@
+{% macro alert(type="info", message="", dismissible=false, icon=null) %}
+<div class="alert alert-{{ type }}{% if dismissible %} alert-dismissible fade show{% endif %}" role="alert">
+    {% if icon %}
+    <i class="{{ icon }} me-2"></i>
+    {% endif %}
+    {{ message|safe }}
+    {% if dismissible %}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% macro success_alert(message, dismissible=true) %}
+{{ alert("success", message, dismissible, "fas fa-check-circle") }}
+{% endmacro %}
+
+{% macro error_alert(message, dismissible=true) %}
+{{ alert("danger", message, dismissible, "fas fa-exclamation-triangle") }}
+{% endmacro %}
+
+{% macro warning_alert(message, dismissible=true) %}
+{{ alert("warning", message, dismissible, "fas fa-exclamation-circle") }}
+{% endmacro %}
+
+{% macro info_alert(message, dismissible=true) %}
+{{ alert("info", message, dismissible, "fas fa-info-circle") }}
+{% endmacro %}
