@@ -1,0 +1,402 @@
+Got it, Mzee. Here’s a clean, practical spec you can hand to a dev (or build yourself) to get this “Streamlit-but-FastAPI/Jinja/Markdown” system right.
+
+1) Product goals
+	•	Build apps and pages using:
+	•	Markdown for content
+	•	Plain HTML + Jinja2 for templates/components
+	•	Bootstrap for styling
+	•	jQuery for light interactivity
+	•	Edit content/templates via a minimal CMS UI that writes files and commits to a Git repo.
+	•	No database required for content (filesystem-first). Optional SQLite for logs/users.
+	•	Deployable as a standard FastAPI app.
+
+2) Non-goals
+	•	No WYSIWYG page builder.
+	•	No heavy SPA framework.
+	•	No complex workflow engine (basic Git commits only).
+	•	Not a full headless CMS; file-backed by design.
+
+3) Tech stack
+	•	Backend: FastAPI + Uvicorn/Gunicorn
+	•	Templating: Jinja2 (macros, includes, filters)
+	•	Styling: Bootstrap (allow Bootswatch themes)
+	•	JS: jQuery (progressive enhancement)
+	•	Markdown: python-markdown (with fenced code, tables), plus optional extensions (toc, attr_list), Bleach for sanitization
+	•	Git: pygit2 or Git CLI (subprocess) for commits/branches
+	•	Auth: starlette sessions + passlib, or OAuth via Authlib (optional)
+	•	Config: YAML/TOML
+
+4) Content model
+	•	Pages live as Markdown files with YAML front-matter:
+
+# content/pages/getting-started.md
+---
+title: Getting Started
+slug: /getting-started
+layout: docs.html
+draft: false
+nav_order: 10
+seo:
+  description: Quick start
+---
+# Markdown body starts here
+
+
+	•	Templates choose layout; layout pulls in Jinja macros/partials/components.
+	•	Static assets under /static (css/js/img).
+	•	Optional data files (YAML/JSON) for simple data-driven pages.
+
+5) Core features
+
+5.1 Rendering & routing
+	•	Route resolver reads front-matter:
+	•	slug -> mounts at that URL.
+	•	layout -> renders with templates/layouts/<layout>.
+	•	Markdown rendered to safe HTML, passed into Jinja block ({{ content|safe }}).
+	•	Global context: site config, nav tree, build version, Git info (commit hash/branch).
+
+5.2 Jinja component system
+	•	/templates/components/ for reusable Jinja macros:
+	•	alert, badge, card, grid, table, tabs, modal, form_field, pagination.
+	•	/templates/partials/ for header, footer, sidebar, nav.
+	•	Filters:
+	•	md (markdown->html)
+	•	datefmt, slugify, safe_trusted (for whitelisted HTML)
+
+5.3 UI interactivity (jQuery)
+	•	Progressive widgets: tabs, accordions, modals, “copy code”, search box (client-side Lunr.js optional).
+	•	Optional HTMX-style partial refresh via simple jQuery .load() endpoints.
+
+5.4 Simple CMS (file + Git)
+	•	Features:
+	•	Browse files (scoped to content/, templates/).
+	•	Create/edit/rename/delete Markdown, data files, and templates.
+	•	Preview (server renders Markdown in chosen layout).
+	•	Commit changes with message; show diff; associate user.
+	•	Optional “draft branch” flow: edit on branch, open PR (if remote configured).
+	•	Audit log (SQLite or JSONL) of edits, diffs, user, timestamp.
+	•	Safety:
+	•	File path allow-list; block .. traversal.
+	•	CSRF tokens; rate limit; size limits.
+	•	Pre-commit hooks: lint front-matter, validate links, markdown check.
+
+5.5 Navigation & search
+	•	Navigation auto-built from front-matter (nav_order, parent/section)
+	•	Search:
+	•	Option A: client-side index (Lunr.js) built on startup or per commit.
+	•	Option B: server search over file contents (simple grep with caching).
+
+5.6 Theming
+	•	Bootswatch theme switch via config.
+	•	Custom SCSS build optional (or plain CSS overrides).
+
+5.7 Configuration
+	•	config.yaml:
+
+site:
+  name: "App Name"
+  base_url: "https://example.com"
+  theme: "flatly"  # bootswatch
+content:
+  dir: "content/pages"
+  data_dir: "content/data"
+  static_dir: "static"
+git:
+  repo_path: "."
+  default_branch: "main"
+  author_from_user: true
+auth:
+  mode: "basic"   # none|basic|oauth
+  admins: ["you@example.com"]
+security:
+  csp: "default-src 'self'; img-src 'self' data:; script-src 'self'"
+
+
+	•	Hot-reload in dev.
+
+5.8 Authentication & roles
+	•	Modes:
+	•	none for internal sandbox
+	•	basic with user store (hashed passwords)
+	•	oauth (Google/Microsoft)
+	•	Roles: viewer, editor, admin
+	•	viewer: public pages only
+	•	editor: CMS edit/commit
+	•	admin: settings, theme, user mgmt
+
+5.9 Git workflows
+	•	Default: direct commit to main with signed-off message.
+	•	Optional: branch per editor session -> open PR (if remote set).
+	•	Commit message format:
+	•	content: edit getting-started.md (#slug=/getting-started) by <user>
+	•	Tag releases from CMS (“Publish version”).
+
+5.10 Extensibility hooks
+	•	Pre-render: transform Markdown AST (e.g., inject callouts).
+	•	Post-render: add anchor links, syntax highlight (Pygments).
+	•	Pre-commit: lint, link check.
+	•	Route registry: add custom endpoints for data apps/charts.
+	•	Simple “apps/” folder: each app = Jinja page + Python handler for data.
+
+6) API surface (FastAPI)
+	•	Public:
+	•	GET / home
+	•	GET /_page/{slug:path} internal resolver (used by router)
+	•	GET /static/... static files
+	•	GET /sitemap.xml, GET /robots.txt
+	•	GET /search?q=... (server search if enabled)
+	•	CMS (auth required):
+	•	GET /cms dashboard
+	•	GET /cms/files?root=content|templates
+	•	GET /cms/file?path=...
+	•	POST /cms/file (create/update: {path, content, message, layout?})
+	•	POST /cms/rename
+	•	POST /cms/delete
+	•	POST /cms/preview (returns rendered HTML)
+	•	GET /cms/diff?path=...&rev=...
+	•	POST /cms/commit (batch commit)
+	•	GET /cms/logs
+	•	POST /cms/publish (tag/release)
+	•	POST /cms/theme (admin)
+	•	POST /cms/reindex (search index rebuild)
+	•	Auth:
+	•	GET/POST /auth/login
+	•	POST /auth/logout
+	•	GET /auth/callback (oauth)
+
+7) Directory layout
+
+app/
+  main.py
+  deps.py
+  security.py
+  services/
+    content_loader.py
+    markdown.py
+    git_repo.py
+    search.py
+    nav.py
+  cms/
+    routes.py
+    forms.py
+  public/
+    routes.py
+  templates/
+    layouts/
+      base.html
+      docs.html
+      landing.html
+      app.html
+    components/
+      alert.html
+      card.html
+      table.html
+    partials/
+      head.html
+      header.html
+      footer.html
+      sidebar.html
+    cms/
+      index.html
+      editor.html
+      preview.html
+      diff.html
+  content/
+    pages/
+      index.md
+      getting-started.md
+    data/
+      team.yml
+  static/
+    css/
+    js/
+    img/
+  tests/
+config.yaml
+
+8) Security & reliability
+	•	Markdown sanitization with Bleach; only allow whitelisted tags/attrs.
+	•	CSRF tokens on CMS forms; same-site cookies; secure session.
+	•	Content-Security-Policy header.
+	•	Rate limiting on CMS endpoints.
+	•	Input validation and path allow-listing.
+	•	Size limits on files (e.g., 1–5 MB).
+	•	Optional backup: nightly git bundle or tar of content/.
+
+9) Performance
+	•	Cache rendered pages in memory keyed by file mtime + commit hash.
+	•	ETag/Last-Modified on pages and static assets.
+	•	Optional CDN for /static.
+	•	Async file I/O and git ops offloaded to thread pool.
+	•	Lazy building of search index.
+
+10) Observability
+	•	Structured logs (uvicorn + app logger).
+	•	Request ID per request.
+	•	/healthz and /readyz.
+	•	Basic metrics (latency, 4xx/5xx) — expose /metrics (Prometheus optional).
+
+11) Deployment
+	•	Dev: uvicorn app.main:app --reload
+	•	Prod: Gunicorn + Uvicorn workers; behind Nginx/ALB.
+	•	Dockerfile:
+	•	Multi-stage build, non-root user, pinned deps.
+	•	CI:
+	•	Lint, type-check, tests, build image.
+	•	Optional: on merge to main, auto-deploy.
+
+12) Minimal acceptance criteria (MVP)
+	•	Content
+	•	I can add a Markdown file with front-matter and see it at its slug.
+	•	I can pick a Jinja layout per page.
+	•	CMS
+	•	I can browse, edit, preview, and commit a Markdown page from the browser.
+	•	Commits show my username and a message.
+	•	I can see diff of last commit for a file.
+	•	Theming
+	•	I can change the Bootswatch theme in settings.
+	•	Security
+	•	Basic auth + CSRF enabled on CMS endpoints.
+	•	Markdown sanitized; script tags stripped.
+	•	Search
+	•	I can search text and get matching pages.
+
+13) Nice-to-have (Phase 2)
+	•	Drafts and scheduled publish.
+	•	Branch/PR flow to remote (GitHub/GitLab).
+	•	Media manager (images upload -> /static/img + reference tool).
+	•	Client-side full-text search index (Lunr) generated at build time.
+	•	Shortcodes in Markdown ({{< alert >}}) mapped to Jinja components.
+	•	App “widgets” that hit FastAPI endpoints and render partials (charts, tables).
+	•	Role-based content locks and review notes.
+
+14) Quick starter snippets
+
+14.1 FastAPI app with Jinja + Markdown
+
+# app/main.py
+from fastapi import FastAPI, Request, Depends, HTTPException
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+from pathlib import Path
+import yaml, markdown
+from bleach.sanitizer import Cleaner
+
+app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Environment(
+    loader=FileSystemLoader("templates"),
+    autoescape=select_autoescape(["html"])
+)
+
+cleaner = Cleaner(tags=[ "a","p","ul","ol","li","h1","h2","h3","h4","h5","h6",
+                         "pre","code","blockquote","em","strong","table","thead",
+                         "tbody","tr","th","td","img","hr" ],
+                  attributes={ "*": ["class","id"], "a":["href","title","target","rel"], "img":["src","alt","title"] },
+                  protocols=["http","https","mailto","data"])
+
+def load_page(slug: str):
+    # map slug -> file path
+    content_dir = Path("content/pages")
+    if slug in ("", "/"): slug = "index"
+    path = content_dir / f"{slug.strip('/').replace('/', '_')}.md"
+    if not path.exists(): raise FileNotFoundError
+    raw = path.read_text(encoding="utf-8")
+    fm, body = raw.split("\n---", 1) if raw.startswith("---") else ("", raw)
+    meta = yaml.safe_load(fm.strip("-\n")) if fm else {}
+    html = markdown.markdown(body, extensions=["fenced_code","tables","toc","attr_list"])
+    safe_html = cleaner.clean(html)
+    return meta, safe_html
+
+@app.get("/{slug:path}", response_class=HTMLResponse)
+async def render_page(request: Request, slug: str = ""):
+    try:
+        meta, content_html = load_page(slug)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404)
+    layout = meta.get("layout", "docs.html")
+    tmpl = templates.get_template(f"layouts/{layout}")
+    return tmpl.render(
+        request=request,
+        content=content_html,
+        page=meta,
+        site={"name": "App Name"}
+    )
+
+14.2 Base layout (Jinja)
+
+<!-- templates/layouts/base.html -->
+<!doctype html>
+<html lang="en">
+  <head>
+    {% include "partials/head.html" %}
+  </head>
+  <body>
+    {% include "partials/header.html" %}
+    <main class="container py-4">
+      {% block body %}{% endblock %}
+    </main>
+    {% include "partials/footer.html" %}
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
+
+14.3 Docs layout
+
+<!-- templates/layouts/docs.html -->
+{% extends "layouts/base.html" %}
+{% block body %}
+<div class="row">
+  <aside class="col-12 col-md-3" id="sidebar">
+    {% include "partials/sidebar.html" %}
+  </aside>
+  <article class="col-12 col-md-9">
+    <h1>{{ page.title }}</h1>
+    <div id="content">{{ content|safe }}</div>
+  </article>
+</div>
+{% endblock %}
+
+14.4 CMS edit (very minimal)
+	•	GET /cms/file?path=... -> render textarea + preview button
+	•	POST /cms/file -> write file; git add; git commit -m "<msg>" --author "<user> <email>"
+
+# app/cms/routes.py (excerpt)
+from fastapi import APIRouter, Form
+import subprocess, os
+
+router = APIRouter(prefix="/cms", tags=["cms"])
+
+@router.post("/file")
+async def save_file(path: str = Form(...), content: str = Form(...), message: str = Form("Edit via CMS")):
+    safe_root = Path("content")
+    full = (safe_root / Path(path)).resolve()
+    if not str(full).startswith(str(safe_root.resolve())):
+        raise HTTPException(400, "Invalid path")
+    full.parent.mkdir(parents=True, exist_ok=True)
+    full.write_text(content, encoding="utf-8")
+    subprocess.run(["git","add",str(full)], check=True)
+    subprocess.run(["git","commit","-m",message], check=True)
+    return {"ok": True}
+
+15) Delivery roadmap
+	•	Week 1 (MVP)
+	•	Routing, Markdown rendering with front-matter
+	•	Base/Docs layouts, components scaffold
+	•	Minimal CMS: edit/commit/preview
+	•	Basic auth, CSRF, sanitization
+	•	Week 2
+	•	Nav builder, search, diffs, audit log
+	•	Theming toggle, assets pipeline
+	•	Dockerfile, CI, health endpoints
+	•	Week 3+
+	•	Drafts, media manager, PR workflow
+	•	App widgets and data endpoints
+	•	Role-based approvals
+
+⸻
+
+If you want, I can turn this into a starter repo layout with the key files stubbed out next. Or we can prioritize the MVP endpoints and I’ll write a tighter implementation plan with tasks and test cases.
