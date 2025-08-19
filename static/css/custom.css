@@ -166,9 +166,101 @@
   color: white;
 }
 
-/* Hero section for landing pages */
+/* Component-specific styles */
 .hero-section {
-  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  color: white;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  border-radius: 15px;
+  margin: 2rem 0;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6));
+  z-index: 1;
+}
+
+.hero-section .container {
+  position: relative;
+  z-index: 2;
+}
+
+.feature-icon {
+  margin-bottom: 1rem;
+}
+
+.testimonial-card {
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+.pricing-card {
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.pricing-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
+
+.pricing-card.border-primary {
+  border-width: 2px !important;
+  position: relative;
+}
+
+.pricing-card .price {
+  font-weight: bold;
+  margin: 1rem 0;
+}
+
+.gallery-item img {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 10px;
+}
+
+.gallery-item img:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+.contact-icon {
+  margin-bottom: 1rem;
+}
+
+.newsletter-section {
+  border-radius: 15px;
+  margin: 2rem 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.cta-section {
+  border-radius: 15px;
+  margin: 3rem 0;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark, #0056b3) 100%);
 }
 
 /* Card improvements */

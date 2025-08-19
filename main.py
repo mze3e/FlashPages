@@ -12,6 +12,8 @@ import secrets
 from app.deps import get_templates, get_config, get_current_user
 from app.public.routes import router as public_router
 from app.cms.routes import router as cms_router
+from app.models import create_tables
+from app.api.forms import router as forms_router
 
 # Load configuration
 config_path = Path("config.yaml")
@@ -56,6 +58,9 @@ static_dir = Path(config['content']['static_dir'])
 static_dir.mkdir(exist_ok=True)
 app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
+# Initialize database tables
+create_tables()
+
 # Initialize Jinja2 templates with filters
 from app.deps import get_templates
 templates = get_templates()
@@ -91,6 +96,7 @@ async def logout(request: Request):
     return RedirectResponse(url="/", status_code=302)
 
 # Include routers (public router last because it has catch-all route)
+app.include_router(forms_router, prefix="/api/forms")
 app.include_router(cms_router)
 app.include_router(public_router)
 

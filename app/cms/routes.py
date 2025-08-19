@@ -10,6 +10,8 @@ from app.services.git_repo import GitRepo
 from app.services.search import SimpleSearch
 from app.services.markdown import render_markdown
 from app.security import validate_file_path, is_safe_filename, validate_content_size
+from app.models import get_db, FormSubmission
+from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/cms", tags=["cms"])
 
@@ -266,3 +268,27 @@ async def cms_search(
     
     results = search.search(query, limit=20)
     return JSONResponse({"results": results})
+
+@router.get("/forms", response_class=HTMLResponse)
+async def view_forms(request: Request, user = Depends(require_auth)):
+    """View form submissions"""
+    templates = get_templates()
+    config = get_config()
+    
+    # Get database session
+    db = next(get_db())
+    try:
+        submissions = db.query(FormSubmission).order_by(
+            FormSubmission.created_at.desc()
+        ).limit(100).all()
+        
+        tmpl = templates.get_template("cms/forms.html")
+        return tmpl.render(
+            request=request,
+            user=user,
+            submissions=submissions,
+            site=config.get('site', {}),
+            csrf_token=get_csrf_token(request)
+        )
+    finally:
+        db.close()

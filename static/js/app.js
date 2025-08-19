@@ -9,6 +9,7 @@
         initScrollSpy();
         initCodeBlocks();
         initTables();
+        initForms();
     });
 
     // Search functionality
@@ -136,6 +137,58 @@
             // Add Bootstrap table classes
             $table.addClass('table table-striped table-hover');
         });
+    }
+
+    // Form submission handling for component modals
+    function initForms() {
+        // Make submitForm available globally
+        window.submitForm = async function(formId) {
+            const form = document.getElementById(formId);
+            if (!form) return;
+            
+            const formData = new FormData(form);
+            const modalElement = form.closest('.modal');
+            const modal = modalElement ? bootstrap.Modal.getInstance(modalElement) : null;
+            
+            // Add current page URL
+            formData.append('page_url', window.location.pathname);
+            
+            try {
+                const response = await fetch('/api/forms/submit', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showAlert('success', result.message || 'Form submitted successfully!');
+                    form.reset();
+                    if (modal) modal.hide();
+                } else {
+                    throw new Error(result.message || 'Failed to submit form');
+                }
+            } catch (error) {
+                showAlert('danger', 'Error submitting form: ' + error.message);
+            }
+        };
+        
+        // Alert display function
+        window.showAlert = function(type, message) {
+            const alertDiv = $(`
+                <div class="alert alert-${type} alert-dismissible fade show" style="position: fixed; top: 20px; right: 20px; z-index: 9999; max-width: 350px;">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `);
+            
+            $('body').append(alertDiv);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                alertDiv.alert('close');
+            }, 5000);
+        };
     }
 
     // Smooth scrolling for anchor links

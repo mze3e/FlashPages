@@ -3,11 +3,13 @@ import yaml
 import os
 from typing import Dict, Any, Tuple, Optional
 from datetime import datetime
+from .component_processor import ComponentProcessor
 
 class ContentLoader:
     def __init__(self, content_dir: str = "content/pages"):
         self.content_dir = Path(content_dir)
         self.content_dir.mkdir(parents=True, exist_ok=True)
+        self.component_processor = ComponentProcessor()
     
     def load_page(self, slug: str) -> Tuple[Dict[str, Any], str]:
         """Load a page by slug, returning metadata and content"""
@@ -65,6 +67,9 @@ class ContentLoader:
             'modified_time': datetime.fromtimestamp(stat.st_mtime),
             'file_size': stat.st_size
         })
+        
+        # Process components in the body content
+        body = self.component_processor.process_content(body)
         
         return metadata, body
     
