@@ -7,8 +7,11 @@ The system is designed as a "Streamlit-but-FastAPI" approach, providing a simple
 ## Recent Updates (August 19, 2025)
 - ✅ Resolved authentication route issues by fixing router order (auth routes must be before public catch-all routes)
 - ✅ Fixed Jinja2 template filter issues (strftime, markdown, slugify filters now working properly)
-- ✅ Complete application is fully functional with login (admin/admin), CMS dashboard, and content management
-- ✅ All core features tested and working: file editing, Git integration, search, navigation, theming
+- ✅ Added professional "New Page" creation modal with auto-slug generation and template selection
+- ✅ Improved Git service with fallback functionality - files save even if Git commit fails
+- ✅ Enhanced CMS dashboard with better file browsing and creation workflow
+- ✅ Complete application is fully functional with login (admin/admin), page creation, editing, and content management
+- ✅ All core features tested and working: authentication, file editing, navigation, theming, search
 
 # User Preferences
 

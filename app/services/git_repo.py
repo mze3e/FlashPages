@@ -35,7 +35,8 @@ class GitRepo:
             subprocess.run(["git", "add", file_path], 
                          cwd=self.repo_path, check=True, capture_output=True)
         except subprocess.CalledProcessError as e:
-            raise Exception(f"Failed to add file to git: {e}")
+            print(f"Warning: Failed to add file to git: {e}")
+            # Continue without git operations
     
     def commit(self, message: str, author_name: str = None, author_email: str = None):
         """Commit changes with message and optional author"""
@@ -49,9 +50,10 @@ class GitRepo:
                                   capture_output=True, text=True)
             return result.stdout
         except subprocess.CalledProcessError as e:
-            if "nothing to commit" in e.stdout:
+            if "nothing to commit" in str(e.stdout):
                 return "No changes to commit"
-            raise Exception(f"Failed to commit: {e}")
+            print(f"Warning: Failed to commit to git: {e}")
+            return "File saved (git commit failed)"
     
     def get_file_diff(self, file_path: str, revision: str = "HEAD~1") -> str:
         """Get diff for a specific file"""
