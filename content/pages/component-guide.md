@@ -1,179 +1,118 @@
 ---
-title: "Component Guide"
-slug: "components"
+title: "Component Examples"
+slug: "component-guide"
 layout: "docs"
-description: "Complete guide to using shorthand components in your content"
-nav_order: 5
+description: "Interactive examples of all available components"
+nav_order: 6
 ---
 
-# Component System Guide
+# Component Examples
 
-This guide shows you how to use our powerful component system with simple shorthand notation.
+This page demonstrates all available components with live examples.
 
-## Getting Started
+## Hero Section
 
-Components use a simple bracket syntax:
-```markdown
-[component_type parameter="value" another_param="value"]
-```
+[hero title="Component System Demo" subtitle="See all components in action with live examples" bg_image="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=600&fit=crop" button_text="Explore Components" modal_target="signupModal" button_color="primary"]
 
-## Available Components
+## Feature Grid
 
-### Hero Section
-Create stunning hero sections with background images and call-to-action buttons:
-
-```markdown
-[hero title="Your Title" subtitle="Your subtitle" bg_image="image-url" button_text="Click Me" button_url="link" button_color="primary"]
-```
-
-**Parameters:**
-- `title` - Main heading text
-- `subtitle` - Subheading text (optional)
-- `bg_image` - Background image URL
-- `button_text` - Button text
-- `button_url` - Button link OR `modal_target` for modal
-- `button_color` - Bootstrap color (primary, secondary, success, etc.)
-
-### Cards
-Create responsive card layouts:
-
-```markdown
-[card title="Card Title" text="Card description" image="image-url" button_text="Action" button_url="link" width="4"]
-```
-
-**Parameters:**
-- `title` - Card title
-- `text` - Card description
-- `image` - Card image URL (optional)
-- `button_text` - Button text (optional)
-- `button_url` - Button link OR `modal_target`
-- `button_color` - Button style
-- `width` - Bootstrap column width (1-12)
-
-### Call-to-Action (CTA)
-Eye-catching CTA sections:
-
-```markdown
-[cta title="Take Action Now" subtitle="Don't miss this opportunity" button_text="Get Started" modal_target="signupModal" bg_color="primary"]
-```
-
-### Features
-Highlight key features with icons:
-
-```markdown
-[feature icon="rocket" title="Fast Performance" text="Lightning-fast loading times" icon_color="primary" width="4"]
-```
-
-### Testimonials
-Customer testimonials with photos:
-
-```markdown
-[testimonial author="John Doe" company="Acme Corp" quote="Amazing product!" image="author-photo-url" width="6"]
-```
-
-### Pricing Cards
-Professional pricing tables:
-
-```markdown
-[pricing title="Pro Plan" price="99" period="month" features="Feature 1,Feature 2,Feature 3" button_text="Choose Plan" featured="true"]
-```
-
-### Contact Information
-Contact details with icons:
-
-```markdown
-[contact icon="envelope" title="Email" text="contact@example.com" link="mailto:contact@example.com" button_text="Send Email"]
-```
-
-### Newsletter Signup
-Newsletter subscription prompts:
-
-```markdown
-[newsletter title="Stay Updated" subtitle="Get our latest news" button_text="Subscribe" modal_target="newsletterModal"]
-```
-
-### Image Gallery
-Photo galleries with modal previews:
-
-```markdown
-[gallery image="photo-url" title="Photo Title" width="3"]
-```
-
-### Modal Dialogs
-Interactive forms and dialogs:
-
-```markdown
-[modal id="contactModal" title="Contact Us" form_type="contact" subtitle="Get in touch" include_phone="true" button_text="Send"]
-```
-
-**Form Types:**
-- `email` - Email signup forms
-- `newsletter` - Newsletter subscription
-- `contact` - Full contact forms with message
-
-**Form Options:**
-- `include_name="true"` - Add name field
-- `include_phone="true"` - Add phone field
-- `include_company="true"` - Add company field
-
-## Layout Tips
-
-### Bootstrap Grid System
-Wrap components in Bootstrap grid for proper layout:
-
-```markdown
 <div class="container">
 <div class="row">
 
-[card title="Card 1" width="4"]
-[card title="Card 2" width="4"]
-[card title="Card 3" width="4"]
+[feature icon="rocket" title="High Performance" text="Optimized for speed and efficiency" width="3" icon_color="primary"]
+
+[feature icon="shield-alt" title="Secure" text="Enterprise-grade security features" width="3" icon_color="success"]
+
+[feature icon="mobile-alt" title="Responsive" text="Works perfectly on all devices" width="3" icon_color="info"]
+
+[feature icon="heart" title="User Friendly" text="Intuitive and easy to use interface" width="3" icon_color="danger"]
 
 </div>
 </div>
-```
 
-### Responsive Design
-All components are mobile-responsive by default. Use width parameters to control desktop layout.
+## Card Examples
 
-## Form Management
+<div class="container">
+<div class="row">
 
-All form submissions are automatically saved to the database and can be viewed in the CMS admin panel at `/cms/forms`.
+[card title="Documentation" text="Complete guides and API documentation to get you started quickly." image="https://images.unsplash.com/photo-1481487196290-c152efe083f5?w=400&h=200&fit=crop" button_text="Read Docs" button_link="/components" width="6"]
 
-### Accessing Form Data
-- Navigate to `/cms` and log in as admin
-- Click "Form Submissions" to view all submitted forms
-- Filter by form type (email, contact, newsletter)
-- Export data or delete old submissions
+[card title="Tutorials" text="Step-by-step tutorials to help you build amazing projects." image="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=200&fit=crop" button_text="Start Learning" button_link="/components" width="6"]
 
-## Examples in Action
+</div>
+</div>
 
-Check out these example pages:
-- [Landing Page Example](/landing-example) - Complete landing page with all components
-- [Blog Example](/blog-example) - Blog post enhanced with components
+## Testimonials
 
-## Best Practices
+<div class="container">
+<div class="row">
 
-1. **Keep it Simple** - Don't overuse components, they should enhance content
-2. **Test Responsiveness** - Always check how components look on mobile devices
-3. **Use Consistent Colors** - Stick to your brand's color scheme
-4. **Optimize Images** - Use appropriate image sizes for faster loading
-5. **Test Forms** - Make sure all modal forms work properly before publishing
+[testimonial author="Sarah Johnson" company="TechCorp Inc." quote="This component system has revolutionized how we build landing pages. The simplicity is incredible!" image="https://images.unsplash.com/photo-1494790108755-2616b612b5bb?w=150&h=150&fit=crop&crop=face" width="6"]
 
-## Troubleshooting
+[testimonial author="Michael Chen" company="StartupXYZ" quote="We were able to create a professional website in minutes. The results exceeded our expectations!" image="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" width="6"]
 
-**Component not rendering?**
-- Check bracket syntax `[component param="value"]`
-- Ensure all quotes are properly closed
-- Check parameter spelling
+</div>
+</div>
 
-**Modal not working?**
-- Verify modal ID matches the `modal_target` parameter
-- Make sure the modal component is included on the page
+## Pricing Example
 
-**Forms not submitting?**
-- Check browser console for JavaScript errors
-- Verify form fields are properly configured
-- Test with simple email form first
+<div class="container">
+<div class="row">
 
-Need help? [Contact our support team](/contact) for assistance with components and forms.
+[pricing title="Basic" price="19" period="month" features="5 Pages,Basic Components,Email Support,1GB Storage" button_text="Start Basic" modal_target="signupModal" button_color="outline-primary" width="4"]
+
+[pricing title="Professional" price="49" period="month" features="Unlimited Pages,All Components,Priority Support,10GB Storage,Custom Themes" button_text="Go Professional" modal_target="signupModal" button_color="primary" featured="true" width="4"]
+
+[pricing title="Enterprise" price="99" period="month" features="Everything in Pro,Custom Development,24/7 Support,Unlimited Storage,White Label" button_text="Contact Sales" modal_target="contactModal" button_color="outline-primary" width="4"]
+
+</div>
+</div>
+
+## Newsletter Signup
+
+[newsletter title="Stay in the Loop" subtitle="Get updates about new components and features" placeholder="Enter your email address" button_text="Subscribe Now"]
+
+## Contact Information
+
+<div class="container">
+<div class="row">
+
+[contact email="support@example.com" phone="+1 (555) 123-4567" address="123 Innovation Drive, Tech City, TC 12345" website="https://example.com"]
+
+</div>
+</div>
+
+## Call to Action
+
+[cta title="Ready to Transform Your Website?" subtitle="Start building beautiful pages with our component system today" button_text="Get Started Free" modal_target="signupModal" bg_color="gradient-primary"]
+
+## Image Gallery
+
+[gallery images="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop,https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=400&h=300&fit=crop,https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=400&h=300&fit=crop,https://images.unsplash.com/photo-1551650975-87deedd944c3?w=400&h=300&fit=crop" titles="Analytics Dashboard,Team Collaboration,Project Management,Performance Metrics"]
+
+---
+
+## Try the Interactive Forms
+
+Click any of the buttons above to test the modal forms! All submissions are stored in the database and can be viewed by administrators at `/cms/forms`.
+
+### Available Modals:
+- **Signup Modal** - Email collection for trials and signups
+- **Contact Modal** - Contact form with name, email, and message
+- **Newsletter Modal** - Simple email subscription
+
+### Form Features:
+- ✓ Email validation
+- ✓ Required field checking  
+- ✓ Success/error feedback
+- ✓ Database storage
+- ✓ Admin management interface
+
+## Next Steps
+
+1. **View the source** - Check the markdown source of this page to see the component syntax
+2. **Create your own** - Use the CMS to create pages with these components
+3. **Customize styling** - Modify the CSS to match your brand
+4. **Add new components** - Extend the component processor with new elements
+
+Visit the [full component documentation](/components) for detailed parameter lists and advanced usage examples.
