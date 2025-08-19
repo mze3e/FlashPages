@@ -4,6 +4,12 @@ This is a file-based Content Management System (CMS) built with FastAPI that com
 
 The system is designed as a "Streamlit-but-FastAPI" approach, providing a simple yet powerful way to build content-driven websites without requiring a traditional database for content storage.
 
+## Recent Updates (August 19, 2025)
+- ✅ Resolved authentication route issues by fixing router order (auth routes must be before public catch-all routes)
+- ✅ Fixed Jinja2 template filter issues (strftime, markdown, slugify filters now working properly)
+- ✅ Complete application is fully functional with login (admin/admin), CMS dashboard, and content management
+- ✅ All core features tested and working: file editing, Git integration, search, navigation, theming
+
 # User Preferences
 
 Preferred communication style: Simple, everyday language.

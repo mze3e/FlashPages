@@ -60,11 +60,7 @@ app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 from app.deps import get_templates
 templates = get_templates()
 
-# Include routers
-app.include_router(public_router)
-app.include_router(cms_router)
-
-# Health check endpoints
+# Health check endpoints  
 @app.get("/healthz")
 async def health_check():
     return {"status": "healthy"}
@@ -73,7 +69,7 @@ async def health_check():
 async def readiness_check():
     return {"status": "ready"}
 
-# Basic auth login/logout
+# Basic auth login/logout (must be before other routers)
 @app.get("/auth/login", response_class=HTMLResponse)
 async def login_form(request: Request):
     tmpl = templates.get_template("cms/login.html")
@@ -93,6 +89,10 @@ async def login(request: Request, username: str = Form(...), password: str = For
 async def logout(request: Request):
     request.session.clear()
     return RedirectResponse(url="/", status_code=302)
+
+# Include routers (public router last because it has catch-all route)
+app.include_router(cms_router)
+app.include_router(public_router)
 
 if __name__ == "__main__":
     import uvicorn
