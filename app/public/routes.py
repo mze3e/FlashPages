@@ -34,7 +34,11 @@ async def render_page(request: Request, slug: str = ""):
     content_html = render_markdown(content)
     
     # Get layout template
-    layout = metadata.get('layout', 'docs.html')
+    layout = metadata.get('layout', 'docs')
+    # Ensure .html extension
+    if not layout.endswith('.html'):
+        layout = f"{layout}.html"
+    
     try:
         tmpl = templates.get_template(f"layouts/{layout}")
     except:
