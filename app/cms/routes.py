@@ -72,7 +72,7 @@ async def list_files(request: Request, root: str = "content", user = Depends(req
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/file", response_class=HTMLResponse)
-async def edit_file(request: Request, path: str, user = Depends(require_auth)):
+async def edit_file(request: Request, path: str, content: Optional[str] = None, user = Depends(require_auth)):
     """Edit file form"""
     templates = get_templates()
     config = get_config()
@@ -82,24 +82,25 @@ async def edit_file(request: Request, path: str, user = Depends(require_auth)):
         raise HTTPException(status_code=400, detail="Invalid file path")
     
     file_path = Path(path)
-    content = ""
+    file_content = content or ""  # Use provided content from query param
     metadata = {}
     
-    if file_path.exists():
+    # Only load from file if no content provided and file exists
+    if not content and file_path.exists():
         if file_path.suffix == '.md':
             try:
-                metadata, content = content_loader.load_page_by_path(path)
+                metadata, file_content = content_loader.load_page_by_path(path)
             except Exception as e:
-                content = file_path.read_text(encoding='utf-8')
+                file_content = file_path.read_text(encoding='utf-8')
         else:
-            content = file_path.read_text(encoding='utf-8')
+            file_content = file_path.read_text(encoding='utf-8')
     
     tmpl = templates.get_template("cms/editor.html")
     return tmpl.render(
         request=request,
         user=user,
         file_path=path,
-        content=content,
+        content=file_content,
         metadata=metadata,
         site=config.get('site', {}),
         csrf_token=get_csrf_token(request)
