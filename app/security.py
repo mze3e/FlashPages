@@ -2,21 +2,43 @@ from bleach.sanitizer import Cleaner
 from pathlib import Path
 import re
 
-# HTML sanitizer configuration
+# HTML sanitizer configuration - Allow Bootstrap components
 cleaner = Cleaner(
     tags=[
         "a", "p", "ul", "ol", "li", "h1", "h2", "h3", "h4", "h5", "h6",
         "pre", "code", "blockquote", "em", "strong", "table", "thead",
-        "tbody", "tr", "th", "td", "img", "hr", "br", "div", "span"
+        "tbody", "tr", "th", "td", "img", "hr", "br", "div", "span", 
+        "section", "header", "footer", "nav", "article", "aside", "main",
+        "button", "form", "input", "textarea", "label", "select", "option",
+        "small", "mark", "del", "ins", "sub", "sup", "i", "b", "u",
+        "figure", "figcaption", "time", "address", "cite", "q", "abbr",
+        "dfn", "kbd", "samp", "var", "s", "wbr"
     ],
     attributes={
-        "*": ["class", "id"],
-        "a": ["href", "title", "target", "rel"],
-        "img": ["src", "alt", "title"],
-        "div": ["class", "id"],
-        "span": ["class", "id"]
+        "*": ["class", "id", "style", "title", "role", "aria-*", "data-*"],
+        "a": ["href", "title", "target", "rel", "data-bs-toggle", "data-bs-target", "data-bs-dismiss"],
+        "img": ["src", "alt", "title", "width", "height", "loading"],
+        "div": ["class", "id", "style", "role", "aria-*", "data-*"],
+        "span": ["class", "id", "style", "role", "aria-*", "data-*"],
+        "button": ["type", "class", "id", "data-bs-toggle", "data-bs-target", "data-bs-dismiss", "aria-*"],
+        "form": ["method", "action", "class", "id", "role"],
+        "input": ["type", "name", "value", "placeholder", "required", "class", "id", "aria-*"],
+        "textarea": ["name", "placeholder", "required", "class", "id", "rows", "cols"],
+        "label": ["for", "class", "id"],
+        "select": ["name", "class", "id", "required"],
+        "option": ["value", "selected"],
+        "i": ["class", "aria-hidden"],
+        "section": ["class", "id", "style"],
+        "header": ["class", "id"],
+        "footer": ["class", "id"],
+        "nav": ["class", "id", "role", "aria-*"],
+        "table": ["class", "id", "role"],
+        "th": ["scope", "class", "id"],
+        "td": ["class", "id", "colspan", "rowspan"],
+        "figure": ["class", "id"],
+        "time": ["datetime", "class", "id"]
     },
-    protocols=["http", "https", "mailto", "data"]
+    protocols=["http", "https", "mailto", "data", "tel"]
 )
 
 def sanitize_html(html_content: str) -> str:
