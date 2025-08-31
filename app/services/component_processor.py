@@ -3,6 +3,8 @@ import re
 import json
 from typing import Dict, List, Any
 from jinja2 import Template
+import yaml
+from pathlib import Path
 
 class ComponentProcessor:
     """Process component shorthand notation in markdown content"""
@@ -60,11 +62,59 @@ class ComponentProcessor:
                 return self._render_newsletter(params)
             elif component_type == 'modal':
                 return self._render_modal(params)
+            elif component_type == 'data_editor':
+                return self._render_data_editor(params)
             else:
                 return f'<!-- Unknown component: {component_type} -->'
         except Exception as e:
             return f'<!-- Error rendering {component_type}: {str(e)} -->'
     
+    def _render_data_editor(self, params: Dict[str, Any]) -> str:
+        """Render a data editor component"""
+        source = params.get('source')
+        if not source:
+            return '<!-- Data source not specified for data_editor component -->'
+
+        data_dir = Path('content/data')
+        data_file = data_dir / f'{source}.yml'
+
+        if not data_file.exists():
+            return f'<!-- Data file not found: {data_file} -->'
+
+        with open(data_file, 'r') as f:
+            data = yaml.safe_load(f)
+
+        if not data:
+            return '<!-- No data to display -->'
+
+        headers = list(data[0].keys())
+
+        template_str = """
+<div class="data-editor-wrapper" data-source="{{ source }}">
+    <table id="data-editor-{{ source }}" class="table table-bordered">
+        <thead>
+            <tr>
+                {% for header in headers %}
+                <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                {% for header in headers %}
+                <td contenteditable="true" data-field="{{ header }}">{{ row[header] }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button class="btn btn-primary mt-2" onclick="saveData('{{ source }}')">Save</button>
+</div>
+"""
+        template = Template(template_str)
+        return template.render(source=source, headers=headers, data=data)
+
     def _render_hero(self, params: Dict[str, Any]) -> str:
         """Render hero section"""
         template = Template("""

@@ -189,6 +189,46 @@
                 alertDiv.alert('close');
             }, 5000);
         };
+
+        window.saveData = async function(source) {
+            const table = document.getElementById('data-editor-' + source);
+            if (!table) {
+                showAlert('danger', 'Data table not found.');
+                return;
+            }
+
+            const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent);
+            const data = [];
+
+            table.querySelectorAll('tbody tr').forEach(row => {
+                const rowData = {};
+                row.querySelectorAll('td').forEach((cell, index) => {
+                    const field = cell.dataset.field || headers[index];
+                    rowData[field] = cell.textContent;
+                });
+                data.push(rowData);
+            });
+
+            try {
+                const response = await fetch('/api/forms/data/' + source, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showAlert('success', result.message || 'Data saved successfully!');
+                } else {
+                    throw new Error(result.detail || 'Failed to save data');
+                }
+            } catch (error) {
+                showAlert('danger', 'Error saving data: ' + error.message);
+            }
+        };
     }
 
     // Smooth scrolling for anchor links

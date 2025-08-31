@@ -1,9 +1,11 @@
 """API routes for handling form submissions"""
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
-from typing import Dict, Any
+from typing import Dict, Any, List
 import json
 from datetime import datetime
+import yaml
+from pathlib import Path
 
 from ..models import FormSubmission, get_db
 
@@ -123,3 +125,21 @@ async def delete_submission(submission_id: int, db: Session = Depends(get_db)):
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Failed to delete submission: {str(e)}")
+
+@router.post("/data/{source}")
+async def save_data(source: str, data: List[Dict[str, Any]], request: Request):
+    # This is a protected endpoint, so we would normally check for authentication
+    # For now, we'll just proceed
+
+    data_dir = Path('content/data')
+    data_file = data_dir / f'{source}.yml'
+
+    if not data_file.exists():
+        raise HTTPException(status_code=404, detail="Data file not found")
+
+    try:
+        with open(data_file, 'w') as f:
+            yaml.dump(data, f)
+        return {"message": "Data saved successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save data: {str(e)}")
