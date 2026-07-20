@@ -25,6 +25,37 @@ def load_app_module(app_name: str):
         traceback.print_exc()
         return None
 
+@router.get("/apps", response_class=HTMLResponse)
+@router.get("/apps/", response_class=HTMLResponse)
+async def list_apps(request: Request):
+    if not APPS_DIR.exists():
+        return HTMLResponse(content="<h1>No apps directory found</h1>")
+        
+    apps = []
+    for file_path in APPS_DIR.glob("*.py"):
+        if not file_path.name.startswith("_"):
+            app_name = file_path.stem
+            apps.append(app_name)
+            
+    if not apps:
+        return HTMLResponse(content="<h1>No apps found</h1>")
+        
+    html = "<h1>Available Apps</h1><ul>"
+    for app_name in sorted(apps):
+        html += f'<li><a href="/apps/{app_name}">{app_name}</a></li>'
+    html += "</ul>"
+    
+    from app.deps import get_config, get_templates
+    config = get_config()
+    templates = get_templates()
+    tmpl = templates.get_template("apps/app_layout.html")
+    return tmpl.render(
+        request=request,
+        site=config.get('site', {}),
+        page={"title": "Discovered Apps"},
+        body_content=html
+    )
+
 @router.get("/apps/{app_name}", response_class=HTMLResponse)
 async def render_app(request: Request, app_name: str):
     module = load_app_module(app_name)
