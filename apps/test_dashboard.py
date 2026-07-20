@@ -18,20 +18,20 @@ def build(request):
     page.button("btn_search", "Run Search")
     
     page.html("""
-    <div id="search-results" class="mt-3 p-3 bg-light rounded border">Results will appear here.</div>
+    <div id="app-search-results" class="mt-3 p-3 bg-light rounded border">Results will appear here.</div>
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("btn_search").addEventListener("click", function() {
             const query = FlashPageState.get("query", "");
-            document.getElementById("search-results").innerHTML = "Searching for: <strong>" + query + "</strong>...";
+            document.getElementById("app-search-results").innerHTML = "Searching for: <strong>" + query + "</strong>...";
             
             fetch("/api/apps/test_dashboard/search?q=" + encodeURIComponent(query))
                 .then(r => r.json())
                 .then(data => {
-                    document.getElementById("search-results").innerHTML = "Found " + data.results.length + " items: <br>" + data.results.join(", ");
+                    document.getElementById("app-search-results").innerHTML = "Found " + data.results.length + " items: <br>" + data.results.join(", ");
                 })
                 .catch(e => {
-                    document.getElementById("search-results").innerHTML = "<span class='text-danger'>Error: " + e + "</span>";
+                    document.getElementById("app-search-results").innerHTML = "<span class='text-danger'>Error: " + e + "</span>";
                 });
         });
     });
