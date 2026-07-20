@@ -37,10 +37,19 @@ def get_templates():
         import re
         return re.sub(r'[^\w\s-]', '', text).strip().lower().replace(' ', '-')
 
+    def hex_to_rgb_filter(hex_color):
+        hex_color = hex_color.lstrip('#')
+        if len(hex_color) == 6:
+            return f"{int(hex_color[0:2], 16)}, {int(hex_color[2:4], 16)}, {int(hex_color[4:6], 16)}"
+        elif len(hex_color) == 3:
+            return f"{int(hex_color[0]*2, 16)}, {int(hex_color[1]*2, 16)}, {int(hex_color[2]*2, 16)}"
+        return "0, 0, 0"
+
     templates.filters['md'] = markdown_filter
     templates.filters['datefmt'] = datefmt_filter
     templates.filters['strftime'] = strftime_filter
     templates.filters['slugify'] = slugify_filter
+    templates.filters['hex_to_rgb'] = hex_to_rgb_filter
     
     return templates
 

@@ -1,28 +1,26 @@
 site:
-  name: "Content CMS"
-  base_url: "http://localhost:5000"
-  theme: "flatly"  # bootswatch theme
+  name: Content CMS
+  base_url: http://localhost:5000
+  theme: flatly
   theme_settings:
-    primary_color: "#2C3E50"
-    secondary_color: "#95A5A6"
-    background_color: "#FFFFFF"
-    text_color: "#212529"
-    heading_font: "Inter"
-    body_font: "Roboto"
-
+    heading_font: Poppins
+    body_font: Roboto
+    primary_color: '#e11d48'
+    secondary_color: '#0284c7'
+    background_color: '#121212'
+    text_color: '#e0e0e0'
 content:
-  dir: "content/pages"
-  data_dir: "content/data"
-  static_dir: "static"
-
+  dir: content/pages
+  data_dir: content/data
+  static_dir: static
 git:
-  repo_path: "."
-  default_branch: "main"
+  repo_path: .
+  default_branch: main
   author_from_user: true
-
 auth:
-  mode: "basic"   # none|basic|oauth
-  admins: ["admin@example.com"]
-
+  mode: basic
+  admins:
+  - admin@example.com
 security:
-  csp: "default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net"
+  csp: default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net

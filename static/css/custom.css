@@ -252,7 +252,7 @@
 .newsletter-section {
   border-radius: 15px;
   margin: 2rem 0;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, rgba(var(--bs-body-color-rgb), 0.02) 0%, rgba(var(--bs-body-color-rgb), 0.08) 100%);
 }
 
 .cta-section {

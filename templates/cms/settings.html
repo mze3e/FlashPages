@@ -1,6 +1,18 @@
 {% extends "layouts/base.html" %}
 
 {% block body %}
+<!-- Load Google Fonts for Previews -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Cormorant+Garamond&family=Fira+Code&family=Inter:wght@300;400;500;600;700&family=Lato&family=Lora&family=Merriweather&family=Montserrat&family=Open+Sans&family=Oswald&family=Outfit&family=Playfair+Display&family=Poppins&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+    .cursor-pointer { cursor: pointer; }
+    .color-preset-card:hover, .font-preset-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .preset-card-selected { border-color: var(--bs-primary) !important; background-color: var(--bs-primary-bg-subtle, #f8f9fa); }
+    #live-preview { transition: all 0.3s ease; }
+</style>
+
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
@@ -29,7 +41,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="/cms/settings">
-                            <i class="fas fa-cog me-2"></i>Theme Settings
+                            <i class="fas fa-palette me-2"></i>Theme Settings
                         </a>
                     </li>
                 </ul>
@@ -37,7 +49,7 @@
         </nav>
 
         <!-- Main content -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pb-5">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Theme Settings</h1>
             </div>
@@ -49,161 +61,169 @@
             </div>
             {% endif %}
 
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Typography & Colors</h5>
-                        </div>
-                        <div class="card-body">
-                            <form method="post" action="/cms/settings">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                                
-                                <h6 class="mb-3 border-bottom pb-2">Typography (Google Fonts)</h6>
-                                
-                                <div class="mb-3">
-                                    <label for="font_preset" class="form-label">Font Combination Preset</label>
-                                    <select class="form-select" id="font_preset">
-                                        <option value="custom">Custom</option>
-                                        <option value="preset1">Classic Elegance (Playfair Display / Merriweather)</option>
-                                        <option value="preset2">Modern Clarity (Montserrat / Roboto)</option>
-                                        <option value="preset3">Minimalist Bold (Oswald / Open Sans)</option>
-                                        <option value="preset4">Creative Contrast (Abril Fatface / Lato)</option>
-                                        <option value="preset5">Professional Clean (Inter / Inter)</option>
-                                        <option value="preset6">Tech Forward (Fira Code / Open Sans)</option>
-                                        <option value="preset7">Friendly Tech (Poppins / Roboto)</option>
-                                        <option value="preset8">Editorial (Cormorant Garamond / Lora)</option>
-                                        <option value="preset9">Warm Modern (Outfit / Outfit)</option>
-                                        <option value="preset10">Approachable (Lora / Lato)</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="row mb-4">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="heading_font" class="form-label">Heading Font</label>
-                                            <select class="form-select" name="heading_font" id="heading_font">
-                                                <option value="Inter" {% if theme_settings.heading_font == 'Inter' %}selected{% endif %}>Inter</option>
-                                                <option value="Roboto" {% if theme_settings.heading_font == 'Roboto' %}selected{% endif %}>Roboto</option>
-                                                <option value="Playfair Display" {% if theme_settings.heading_font == 'Playfair Display' %}selected{% endif %}>Playfair Display</option>
-                                                <option value="Outfit" {% if theme_settings.heading_font == 'Outfit' %}selected{% endif %}>Outfit</option>
-                                                <option value="Fira Code" {% if theme_settings.heading_font == 'Fira Code' %}selected{% endif %}>Fira Code</option>
-                                                <option value="Open Sans" {% if theme_settings.heading_font == 'Open Sans' %}selected{% endif %}>Open Sans</option>
-                                                <option value="Lora" {% if theme_settings.heading_font == 'Lora' %}selected{% endif %}>Lora</option>
-                                                <option value="Montserrat" {% if theme_settings.heading_font == 'Montserrat' %}selected{% endif %}>Montserrat</option>
-                                                <option value="Oswald" {% if theme_settings.heading_font == 'Oswald' %}selected{% endif %}>Oswald</option>
-                                                <option value="Abril Fatface" {% if theme_settings.heading_font == 'Abril Fatface' %}selected{% endif %}>Abril Fatface</option>
-                                                <option value="Lato" {% if theme_settings.heading_font == 'Lato' %}selected{% endif %}>Lato</option>
-                                                <option value="Poppins" {% if theme_settings.heading_font == 'Poppins' %}selected{% endif %}>Poppins</option>
-                                                <option value="Cormorant Garamond" {% if theme_settings.heading_font == 'Cormorant Garamond' %}selected{% endif %}>Cormorant Garamond</option>
-                                                <option value="Merriweather" {% if theme_settings.heading_font == 'Merriweather' %}selected{% endif %}>Merriweather</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="body_font" class="form-label">Body Font</label>
-                                            <select class="form-select" name="body_font" id="body_font">
-                                                <option value="Inter" {% if theme_settings.body_font == 'Inter' %}selected{% endif %}>Inter</option>
-                                                <option value="Roboto" {% if theme_settings.body_font == 'Roboto' %}selected{% endif %}>Roboto</option>
-                                                <option value="Playfair Display" {% if theme_settings.body_font == 'Playfair Display' %}selected{% endif %}>Playfair Display</option>
-                                                <option value="Outfit" {% if theme_settings.body_font == 'Outfit' %}selected{% endif %}>Outfit</option>
-                                                <option value="Fira Code" {% if theme_settings.body_font == 'Fira Code' %}selected{% endif %}>Fira Code</option>
-                                                <option value="Open Sans" {% if theme_settings.body_font == 'Open Sans' %}selected{% endif %}>Open Sans</option>
-                                                <option value="Lora" {% if theme_settings.body_font == 'Lora' %}selected{% endif %}>Lora</option>
-                                                <option value="Montserrat" {% if theme_settings.body_font == 'Montserrat' %}selected{% endif %}>Montserrat</option>
-                                                <option value="Oswald" {% if theme_settings.body_font == 'Oswald' %}selected{% endif %}>Oswald</option>
-                                                <option value="Abril Fatface" {% if theme_settings.body_font == 'Abril Fatface' %}selected{% endif %}>Abril Fatface</option>
-                                                <option value="Lato" {% if theme_settings.body_font == 'Lato' %}selected{% endif %}>Lato</option>
-                                                <option value="Poppins" {% if theme_settings.body_font == 'Poppins' %}selected{% endif %}>Poppins</option>
-                                                <option value="Cormorant Garamond" {% if theme_settings.body_font == 'Cormorant Garamond' %}selected{% endif %}>Cormorant Garamond</option>
-                                                <option value="Merriweather" {% if theme_settings.body_font == 'Merriweather' %}selected{% endif %}>Merriweather</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <h6 class="mb-3 border-bottom pb-2">Color Palette</h6>
-
-                                <div class="mb-3">
-                                    <label for="color_preset" class="form-label">Color Palette Preset</label>
-                                    <select class="form-select" id="color_preset">
-                                        <option value="custom">Custom</option>
-                                        <option value="preset1">Airy Mineral Neutrals</option>
-                                        <option value="preset2">Grounded Earth</option>
-                                        <option value="preset3">Futuristic Neon</option>
-                                        <option value="preset4">Cyberpunk Glow</option>
-                                        <option value="preset5">Walnut Retro</option>
-                                        <option value="preset6">70s Vintage</option>
-                                        <option value="preset7">Muted Pastel Pops</option>
-                                        <option value="preset8">Jewel-Tone Opulence</option>
-                                        <option value="preset9">Modern SaaS</option>
-                                        <option value="preset10">Dark Minimalist</option>
-                                    </select>
-                                </div>
-
-                                <div class="row mb-4">
-                                    <div class="col-md-6">
-                                        <div class="mb-3 d-flex align-items-center">
-                                            <label for="primary_color" class="form-label me-3 mb-0" style="width: 150px;">Primary Color</label>
-                                            <input type="color" class="form-control form-control-color" id="primary_color" name="primary_color" value="{{ theme_settings.primary_color|default('#2C3E50') }}" title="Choose primary color">
-                                        </div>
-                                        <div class="mb-3 d-flex align-items-center">
-                                            <label for="secondary_color" class="form-label me-3 mb-0" style="width: 150px;">Secondary Color</label>
-                                            <input type="color" class="form-control form-control-color" id="secondary_color" name="secondary_color" value="{{ theme_settings.secondary_color|default('#95A5A6') }}" title="Choose secondary color">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3 d-flex align-items-center">
-                                            <label for="background_color" class="form-label me-3 mb-0" style="width: 150px;">Background Color</label>
-                                            <input type="color" class="form-control form-control-color" id="background_color" name="background_color" value="{{ theme_settings.background_color|default('#FFFFFF') }}" title="Choose background color">
-                                        </div>
-                                        <div class="mb-3 d-flex align-items-center">
-                                            <label for="text_color" class="form-label me-3 mb-0" style="width: 150px;">Text Color</label>
-                                            <input type="color" class="form-control form-control-color" id="text_color" name="text_color" value="{{ theme_settings.text_color|default('#212529') }}" title="Choose text color">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save me-1"></i>Save Settings
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+            <form method="post" action="/cms/settings" id="theme-settings-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                 
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="mb-0">Live Preview Hint</h6>
+                <div class="row">
+                    <div class="col-lg-7">
+                        <!-- Step 1: Colors -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                                <h5 class="mb-1 text-primary"><i class="fas fa-paint-roller me-2"></i>Step 1: Choose a Color Palette</h5>
+                                <p class="small text-muted mb-0">Select a color scheme that matches your brand identity.</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3" id="color-cards-container">
+                                    <!-- Rendered via JS -->
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <p class="small text-muted">Saving these settings will immediately apply them to the public site and this CMS dashboard by overriding the base Bootstrap CSS variables.</p>
-                            <p class="small text-muted">The fonts are dynamically loaded from Google Fonts.</p>
+
+                        <!-- Step 2: Fonts -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                                <h5 class="mb-1 text-primary"><i class="fas fa-font me-2"></i>Step 2: Choose a Typography Theme</h5>
+                                <p class="small text-muted mb-0">Select a font pairing for headings and body text.</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3" id="font-cards-container">
+                                    <!-- Rendered via JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Advanced Customization -->
+                        <div class="accordion mb-4" id="advanced-customization">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingAdvanced">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdvanced" aria-expanded="false" aria-controls="collapseAdvanced">
+                                        <i class="fas fa-sliders-h me-2"></i> Advanced Customization
+                                    </button>
+                                </h2>
+                                <div id="collapseAdvanced" class="accordion-collapse collapse" aria-labelledby="headingAdvanced" data-bs-parent="#advanced-customization">
+                                    <div class="accordion-body bg-light">
+                                        <p class="small text-muted mb-3">Manually tweak your selected theme colors or fonts. Changes will instantly reflect in the Live Preview.</p>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label small fw-bold">Primary Color</label>
+                                                <input type="color" class="form-control form-control-color w-100" id="primary_color" name="primary_color" value="{{ theme_settings.primary_color|default('#2C3E50') }}">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label small fw-bold">Secondary Color</label>
+                                                <input type="color" class="form-control form-control-color w-100" id="secondary_color" name="secondary_color" value="{{ theme_settings.secondary_color|default('#95A5A6') }}">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label small fw-bold">Background Color</label>
+                                                <input type="color" class="form-control form-control-color w-100" id="background_color" name="background_color" value="{{ theme_settings.background_color|default('#FFFFFF') }}">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label small fw-bold">Text Color</label>
+                                                <input type="color" class="form-control form-control-color w-100" id="text_color" name="text_color" value="{{ theme_settings.text_color|default('#212529') }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-3">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label small fw-bold">Heading Font</label>
+                                                <select class="form-select" name="heading_font" id="heading_font">
+                                                    <option value="Inter" {% if theme_settings.heading_font == 'Inter' %}selected{% endif %}>Inter</option>
+                                                    <option value="Roboto" {% if theme_settings.heading_font == 'Roboto' %}selected{% endif %}>Roboto</option>
+                                                    <option value="Playfair Display" {% if theme_settings.heading_font == 'Playfair Display' %}selected{% endif %}>Playfair Display</option>
+                                                    <option value="Outfit" {% if theme_settings.heading_font == 'Outfit' %}selected{% endif %}>Outfit</option>
+                                                    <option value="Fira Code" {% if theme_settings.heading_font == 'Fira Code' %}selected{% endif %}>Fira Code</option>
+                                                    <option value="Open Sans" {% if theme_settings.heading_font == 'Open Sans' %}selected{% endif %}>Open Sans</option>
+                                                    <option value="Lora" {% if theme_settings.heading_font == 'Lora' %}selected{% endif %}>Lora</option>
+                                                    <option value="Montserrat" {% if theme_settings.heading_font == 'Montserrat' %}selected{% endif %}>Montserrat</option>
+                                                    <option value="Oswald" {% if theme_settings.heading_font == 'Oswald' %}selected{% endif %}>Oswald</option>
+                                                    <option value="Abril Fatface" {% if theme_settings.heading_font == 'Abril Fatface' %}selected{% endif %}>Abril Fatface</option>
+                                                    <option value="Lato" {% if theme_settings.heading_font == 'Lato' %}selected{% endif %}>Lato</option>
+                                                    <option value="Poppins" {% if theme_settings.heading_font == 'Poppins' %}selected{% endif %}>Poppins</option>
+                                                    <option value="Cormorant Garamond" {% if theme_settings.heading_font == 'Cormorant Garamond' %}selected{% endif %}>Cormorant Garamond</option>
+                                                    <option value="Merriweather" {% if theme_settings.heading_font == 'Merriweather' %}selected{% endif %}>Merriweather</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label small fw-bold">Body Font</label>
+                                                <select class="form-select" name="body_font" id="body_font">
+                                                    <option value="Inter" {% if theme_settings.body_font == 'Inter' %}selected{% endif %}>Inter</option>
+                                                    <option value="Roboto" {% if theme_settings.body_font == 'Roboto' %}selected{% endif %}>Roboto</option>
+                                                    <option value="Playfair Display" {% if theme_settings.body_font == 'Playfair Display' %}selected{% endif %}>Playfair Display</option>
+                                                    <option value="Outfit" {% if theme_settings.body_font == 'Outfit' %}selected{% endif %}>Outfit</option>
+                                                    <option value="Fira Code" {% if theme_settings.body_font == 'Fira Code' %}selected{% endif %}>Fira Code</option>
+                                                    <option value="Open Sans" {% if theme_settings.body_font == 'Open Sans' %}selected{% endif %}>Open Sans</option>
+                                                    <option value="Lora" {% if theme_settings.body_font == 'Lora' %}selected{% endif %}>Lora</option>
+                                                    <option value="Montserrat" {% if theme_settings.body_font == 'Montserrat' %}selected{% endif %}>Montserrat</option>
+                                                    <option value="Oswald" {% if theme_settings.body_font == 'Oswald' %}selected{% endif %}>Oswald</option>
+                                                    <option value="Abril Fatface" {% if theme_settings.body_font == 'Abril Fatface' %}selected{% endif %}>Abril Fatface</option>
+                                                    <option value="Lato" {% if theme_settings.body_font == 'Lato' %}selected{% endif %}>Lato</option>
+                                                    <option value="Poppins" {% if theme_settings.body_font == 'Poppins' %}selected{% endif %}>Poppins</option>
+                                                    <option value="Cormorant Garamond" {% if theme_settings.body_font == 'Cormorant Garamond' %}selected{% endif %}>Cormorant Garamond</option>
+                                                    <option value="Merriweather" {% if theme_settings.body_font == 'Merriweather' %}selected{% endif %}>Merriweather</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="col-lg-5">
+                        <!-- Live Preview -->
+                        <div class="card sticky-top shadow-sm border-0" style="top: 1.5rem; z-index: 10;">
+                            <div class="card-header bg-dark text-white border-0 d-flex justify-content-between align-items-center py-3">
+                                <h6 class="mb-0 fw-bold"><i class="fas fa-desktop me-2"></i>Live Preview</h6>
+                                <button type="submit" class="btn btn-success btn-sm px-4 fw-bold">
+                                    <i class="fas fa-check me-2"></i>Save Theme
+                                </button>
+                            </div>
+                            <div class="card-body p-0">
+                                <div id="live-preview" style="background-color: var(--lp-bg); color: var(--lp-text); font-family: var(--lp-body-font) !important; min-height: 500px; padding: 2.5rem; border-radius: 0 0 0.25rem 0.25rem;">
+                                    
+                                    <h1 style="font-family: var(--lp-heading-font) !important; color: var(--lp-primary); margin-bottom: 1.25rem; font-weight: 700; line-height: 1.1; font-size: 2.5rem;">Create beautiful websites effortlessly.</h1>
+                                    
+                                    <p style="font-size: 1.1rem; margin-bottom: 2rem; opacity: 0.9; line-height: 1.6; font-family: var(--lp-body-font) !important;">This preview updates instantly as you choose palettes and typography. Select your style on the left, and watch the magic happen right here.</p>
+                                    
+                                    <div class="d-flex gap-3 mb-5">
+                                        <button type="button" style="background-color: var(--lp-primary); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 0.35rem; font-weight: 600; font-family: var(--lp-body-font) !important; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Get Started</button>
+                                        <button type="button" style="background-color: var(--lp-secondary); color: #fff; border: none; padding: 0.75rem 2rem; border-radius: 0.35rem; font-weight: 600; font-family: var(--lp-body-font) !important; cursor: pointer;">Learn More</button>
+                                    </div>
+                                    
+                                    <div style="background-color: color-mix(in srgb, var(--lp-text) 4%, transparent); padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid var(--lp-primary);">
+                                        <h3 style="font-family: var(--lp-heading-font) !important; margin-bottom: 0.75rem; font-size: 1.25rem; font-weight: 600;">Sub-heading Example</h3>
+                                        <p style="margin-bottom: 0; color: color-mix(in srgb, var(--lp-text) 75%, transparent); font-size: 0.95rem; font-family: var(--lp-body-font) !important;">This box demonstrates how subtle contrast and secondary elements will look within your chosen theme settings. It simulates muted text seamlessly.</p>
+                                    </div>
+                                    
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </main>
     </div>
 </div>
 
 <script>
     const colorPresets = {
-        'preset1': { primary: '#C4B5A5', secondary: '#E6E1DC', background: '#F9F7F5', text: '#4A4441' },
-        'preset2': { primary: '#8B5A2B', secondary: '#CDAA7D', background: '#FDF5E6', text: '#3E2723' },
-        'preset3': { primary: '#00FFCC', secondary: '#7B2CBF', background: '#0F172A', text: '#F8FAFC' },
-        'preset4': { primary: '#FF003C', secondary: '#00F0FF', background: '#121212', text: '#E0E0E0' },
-        'preset5': { primary: '#6D4C41', secondary: '#D7CCC8', background: '#EFEBE9', text: '#212121' },
-        'preset6': { primary: '#D35400', secondary: '#F39C12', background: '#FDF2E9', text: '#5D4037' },
-        'preset7': { primary: '#FFB6C1', secondary: '#ADD8E6', background: '#FFF5EE', text: '#2F4F4F' },
-        'preset8': { primary: '#006400', secondary: '#4B0082', background: '#F0F8FF', text: '#191970' },
-        'preset9': { primary: '#2563EB', secondary: '#94A3B8', background: '#F8FAFC', text: '#1E293B' },
-        'preset10': { primary: '#F3F4F6', secondary: '#9CA3AF', background: '#111827', text: '#F9FAFB' }
+        'preset1': { primary: '#6B5E52', secondary: '#94877B', background: '#F9F7F5', text: '#2C2825' },
+        'preset2': { primary: '#8B4513', secondary: '#556B2F', background: '#FDF5E6', text: '#2E1E14' },
+        'preset3': { primary: '#10B981', secondary: '#8B5CF6', background: '#0F172A', text: '#F8FAFC' },
+        'preset4': { primary: '#E11D48', secondary: '#0284C7', background: '#121212', text: '#E0E0E0' },
+        'preset5': { primary: '#6D4C41', secondary: '#D84315', background: '#EFEBE9', text: '#212121' },
+        'preset6': { primary: '#D35400', secondary: '#27AE60', background: '#FDF2E9', text: '#4E342E' },
+        'preset7': { primary: '#C2185B', secondary: '#00796B', background: '#FFF5EE', text: '#2F4F4F' },
+        'preset8': { primary: '#9D0208', secondary: '#036666', background: '#0B0F19', text: '#F3F4F6' },
+        'preset9': { primary: '#2563EB', secondary: '#475569', background: '#F8FAFC', text: '#1E293B' },
+        'preset10': { primary: '#6366F1', secondary: '#4B5563', background: '#111827', text: '#F9FAFB' }
     };
+    const colorNames = [
+        "Airy Mineral Neutrals", "Grounded Earth", "Futuristic Neon", "Cyberpunk Glow",
+        "Walnut Retro", "70s Vintage", "Muted Pastel Pops", "Jewel-Tone Opulence",
+        "Modern SaaS", "Dark Minimalist"
+    ];
 
     const fontPresets = {
         'preset1': { heading: 'Playfair Display', body: 'Merriweather' },
@@ -217,72 +237,138 @@
         'preset9': { heading: 'Outfit', body: 'Outfit' },
         'preset10': { heading: 'Lora', body: 'Lato' }
     };
+    const fontNames = [
+        "Classic Elegance", "Modern Clarity", "Minimalist Bold", "Creative Contrast",
+        "Professional Clean", "Tech Forward", "Friendly Tech", "Editorial",
+        "Warm Modern", "Approachable"
+    ];
 
     document.addEventListener('DOMContentLoaded', function() {
-        const colorSelect = document.getElementById('color_preset');
         const primaryColor = document.getElementById('primary_color');
         const secondaryColor = document.getElementById('secondary_color');
         const backgroundColor = document.getElementById('background_color');
         const textColor = document.getElementById('text_color');
         
-        const fontSelect = document.getElementById('font_preset');
         const headingFont = document.getElementById('heading_font');
         const bodyFont = document.getElementById('body_font');
+        
+        const livePreview = document.getElementById('live-preview');
+        
+        // Render Color Cards
+        const colorContainer = document.getElementById('color-cards-container');
+        let html = '';
+        Object.keys(colorPresets).forEach((key, index) => {
+            const p = colorPresets[key];
+            html += `
+            <div class="col-md-6">
+                <div class="card h-100 cursor-pointer color-preset-card rounded-3" data-preset="${key}" style="border: 2px solid #eaeaea;">
+                    <div class="card-body p-3">
+                        <h6 class="card-title mb-2 text-dark" style="font-size: 0.9rem; font-weight: 600;">${colorNames[index]}</h6>
+                        <div class="d-flex rounded overflow-hidden shadow-sm" style="height: 35px;">
+                            <div style="flex: 1; background-color: ${p.primary};" title="Primary"></div>
+                            <div style="flex: 1; background-color: ${p.secondary};" title="Secondary"></div>
+                            <div style="flex: 1; background-color: ${p.background}; border: 1px solid #ddd; border-right: none; border-top: none; border-bottom: none;" title="Background"></div>
+                            <div style="flex: 1; background-color: ${p.text};" title="Text"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        });
+        colorContainer.innerHTML = html;
 
-        function checkColorPreset() {
-            let found = 'custom';
+        // Render Font Cards
+        const fontContainer = document.getElementById('font-cards-container');
+        let fontHtml = '';
+        Object.keys(fontPresets).forEach((key, index) => {
+            const p = fontPresets[key];
+            fontHtml += `
+            <div class="col-md-6">
+                <div class="card h-100 cursor-pointer font-preset-card rounded-3" data-preset="${key}" style="border: 2px solid #eaeaea;">
+                    <div class="card-body p-3">
+                        <div style="font-family: '${p.heading}', sans-serif; font-size: 1.15rem; font-weight: 700; line-height: 1.2; margin-bottom: 0.25rem; color: #333;">${fontNames[index]}</div>
+                        <div style="font-family: '${p.body}', sans-serif; font-size: 0.85rem; color: #666;">H: ${p.heading} / B: ${p.body}</div>
+                    </div>
+                </div>
+            </div>`;
+        });
+        fontContainer.innerHTML = fontHtml;
+        
+        // Handle updates
+        function updateLivePreview() {
+            livePreview.style.setProperty('--lp-primary', primaryColor.value);
+            livePreview.style.setProperty('--lp-secondary', secondaryColor.value);
+            livePreview.style.setProperty('--lp-bg', backgroundColor.value);
+            livePreview.style.setProperty('--lp-text', textColor.value);
+            livePreview.style.setProperty('--lp-heading-font', `"${headingFont.value}", sans-serif`);
+            livePreview.style.setProperty('--lp-body-font', `"${bodyFont.value}", sans-serif`);
+        }
+        
+        function updateSelectedCards() {
+            document.querySelectorAll('.color-preset-card').forEach(el => el.classList.remove('preset-card-selected'));
+            document.querySelectorAll('.font-preset-card').forEach(el => el.classList.remove('preset-card-selected'));
+            
+            // Check if current values match any preset
             for (const [key, colors] of Object.entries(colorPresets)) {
                 if (colors.primary.toUpperCase() === primaryColor.value.toUpperCase() &&
                     colors.secondary.toUpperCase() === secondaryColor.value.toUpperCase() &&
                     colors.background.toUpperCase() === backgroundColor.value.toUpperCase() &&
                     colors.text.toUpperCase() === textColor.value.toUpperCase()) {
-                    found = key;
+                    document.querySelector(`.color-preset-card[data-preset="${key}"]`)?.classList.add('preset-card-selected');
                     break;
                 }
             }
-            colorSelect.value = found;
-        }
-
-        function checkFontPreset() {
-            let found = 'custom';
+            
             for (const [key, fonts] of Object.entries(fontPresets)) {
                 if (fonts.heading === headingFont.value && fonts.body === bodyFont.value) {
-                    found = key;
+                    document.querySelector(`.font-preset-card[data-preset="${key}"]`)?.classList.add('preset-card-selected');
                     break;
                 }
             }
-            fontSelect.value = found;
         }
 
-        colorSelect.addEventListener('change', function() {
-            if (this.value !== 'custom') {
-                const colors = colorPresets[this.value];
+        // Attach event listeners to cards
+        document.querySelectorAll('.color-preset-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const presetKey = this.getAttribute('data-preset');
+                const colors = colorPresets[presetKey];
                 primaryColor.value = colors.primary;
                 secondaryColor.value = colors.secondary;
                 backgroundColor.value = colors.background;
                 textColor.value = colors.text;
-            }
+                updateLivePreview();
+                updateSelectedCards();
+            });
         });
-
-        fontSelect.addEventListener('change', function() {
-            if (this.value !== 'custom') {
-                const fonts = fontPresets[this.value];
+        
+        document.querySelectorAll('.font-preset-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const presetKey = this.getAttribute('data-preset');
+                const fonts = fontPresets[presetKey];
                 headingFont.value = fonts.heading;
                 bodyFont.value = fonts.body;
-            }
+                updateLivePreview();
+                updateSelectedCards();
+            });
         });
 
+        // Attach event listeners to raw inputs
         [primaryColor, secondaryColor, backgroundColor, textColor].forEach(el => {
-            el.addEventListener('input', checkColorPreset);
+            el.addEventListener('input', () => {
+                updateLivePreview();
+                updateSelectedCards();
+            });
         });
 
         [headingFont, bodyFont].forEach(el => {
-            el.addEventListener('change', checkFontPreset);
+            el.addEventListener('change', () => {
+                updateLivePreview();
+                updateSelectedCards();
+            });
         });
 
-        // Initial check on load
-        checkColorPreset();
-        checkFontPreset();
+        // Initialize preview on page load
+        updateLivePreview();
+        updateSelectedCards();
     });
 </script>
 {% endblock %}

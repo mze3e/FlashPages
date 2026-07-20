@@ -47,15 +47,19 @@
     :root {
         {% if site.theme_settings.primary_color %}
         --bs-primary: {{ site.theme_settings.primary_color }};
+        --bs-primary-rgb: {{ site.theme_settings.primary_color|hex_to_rgb }};
         {% endif %}
         {% if site.theme_settings.secondary_color %}
         --bs-secondary: {{ site.theme_settings.secondary_color }};
+        --bs-secondary-rgb: {{ site.theme_settings.secondary_color|hex_to_rgb }};
         {% endif %}
         {% if site.theme_settings.background_color %}
         --bs-body-bg: {{ site.theme_settings.background_color }};
+        --bs-body-bg-rgb: {{ site.theme_settings.background_color|hex_to_rgb }};
         {% endif %}
         {% if site.theme_settings.text_color %}
         --bs-body-color: {{ site.theme_settings.text_color }};
+        --bs-body-color-rgb: {{ site.theme_settings.text_color|hex_to_rgb }};
         {% endif %}
         {% if site.theme_settings.body_font %}
         --bs-font-sans-serif: '{{ site.theme_settings.body_font }}', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -86,6 +90,38 @@
     }
     .text-secondary {
         color: var(--bs-secondary) !important;
+    }
+    {% endif %}
+    
+    {% if site.theme_settings.text_color %}
+    .text-muted {
+        color: rgba(var(--bs-body-color-rgb), 0.75) !important;
+    }
+    .card {
+        background-color: var(--bs-body-bg) !important;
+        border-color: rgba(var(--bs-body-color-rgb), 0.125) !important;
+        color: var(--bs-body-color) !important;
+    }
+    .card-header {
+        background-color: rgba(var(--bs-body-color-rgb), 0.04) !important;
+        border-bottom-color: rgba(var(--bs-body-color-rgb), 0.125) !important;
+    }
+    .card-footer {
+        background-color: rgba(var(--bs-body-color-rgb), 0.04) !important;
+        border-top-color: rgba(var(--bs-body-color-rgb), 0.125) !important;
+    }
+    .bg-light {
+        background-color: rgba(var(--bs-body-color-rgb), 0.05) !important;
+        color: var(--bs-body-color) !important;
+    }
+    b, strong, .fw-bold, .fw-bolder, .fw-semibold {
+        color: inherit;
+    }
+    .breadcrumb-item.active {
+        color: rgba(var(--bs-body-color-rgb), 0.85) !important;
+    }
+    .breadcrumb-item + .breadcrumb-item::before {
+        color: rgba(var(--bs-body-color-rgb), 0.5) !important;
     }
     {% endif %}
 </style>

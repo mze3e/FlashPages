@@ -308,7 +308,7 @@ async def view_settings(request: Request, user = Depends(require_auth)):
         csrf_token=get_csrf_token(request)
     )
 
-@router.post("/settings")
+@router.post("/settings", response_class=HTMLResponse)
 async def save_settings(
     request: Request,
     heading_font: str = Form(...),
