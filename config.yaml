@@ -2,6 +2,13 @@ site:
   name: "Content CMS"
   base_url: "http://localhost:5000"
   theme: "flatly"  # bootswatch theme
+  theme_settings:
+    primary_color: "#2C3E50"
+    secondary_color: "#95A5A6"
+    background_color: "#FFFFFF"
+    text_color: "#212529"
+    heading_font: "Inter"
+    body_font: "Roboto"
 
 content:
   dir: "content/pages"

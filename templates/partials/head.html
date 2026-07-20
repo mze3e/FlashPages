@@ -31,5 +31,65 @@
 <!-- Custom CSS -->
 <link rel="stylesheet" href="/static/css/custom.css">
 
+{% if site.theme_settings %}
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{% set fonts = [] %}
+{% if site.theme_settings.heading_font %}{% set _ = fonts.append(site.theme_settings.heading_font|replace(' ', '+')) %}{% endif %}
+{% if site.theme_settings.body_font and site.theme_settings.body_font != site.theme_settings.heading_font %}{% set _ = fonts.append(site.theme_settings.body_font|replace(' ', '+')) %}{% endif %}
+{% if fonts %}
+<link href="https://fonts.googleapis.com/css2?family={{ fonts|join(':wght@300;400;500;600;700&family=') }}:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+{% endif %}
+
+<!-- Theme Configuration overrides -->
+<style>
+    :root {
+        {% if site.theme_settings.primary_color %}
+        --bs-primary: {{ site.theme_settings.primary_color }};
+        {% endif %}
+        {% if site.theme_settings.secondary_color %}
+        --bs-secondary: {{ site.theme_settings.secondary_color }};
+        {% endif %}
+        {% if site.theme_settings.background_color %}
+        --bs-body-bg: {{ site.theme_settings.background_color }};
+        {% endif %}
+        {% if site.theme_settings.text_color %}
+        --bs-body-color: {{ site.theme_settings.text_color }};
+        {% endif %}
+        {% if site.theme_settings.body_font %}
+        --bs-font-sans-serif: '{{ site.theme_settings.body_font }}', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        --bs-body-font-family: var(--bs-font-sans-serif);
+        {% endif %}
+    }
+    
+    {% if site.theme_settings.heading_font %}
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+        font-family: '{{ site.theme_settings.heading_font }}', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    }
+    {% endif %}
+    
+    {% if site.theme_settings.primary_color %}
+    .btn-primary, .bg-primary {
+        background-color: var(--bs-primary) !important;
+        border-color: var(--bs-primary) !important;
+    }
+    .text-primary {
+        color: var(--bs-primary) !important;
+    }
+    {% endif %}
+    
+    {% if site.theme_settings.secondary_color %}
+    .btn-secondary, .bg-secondary {
+        background-color: var(--bs-secondary) !important;
+        border-color: var(--bs-secondary) !important;
+    }
+    .text-secondary {
+        color: var(--bs-secondary) !important;
+    }
+    {% endif %}
+</style>
+{% endif %}
+
 <!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/static/favicon.ico">

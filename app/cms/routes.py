@@ -292,3 +292,67 @@ async def view_forms(request: Request, user = Depends(require_auth)):
         )
     finally:
         db.close()
+
+@router.get("/settings", response_class=HTMLResponse)
+async def view_settings(request: Request, user = Depends(require_auth)):
+    """View theme settings"""
+    templates = get_templates()
+    config = get_config()
+    
+    tmpl = templates.get_template("cms/settings.html")
+    return tmpl.render(
+        request=request,
+        user=user,
+        site=config.get('site', {}),
+        theme_settings=config.get('site', {}).get('theme_settings', {}),
+        csrf_token=get_csrf_token(request)
+    )
+
+@router.post("/settings")
+async def save_settings(
+    request: Request,
+    heading_font: str = Form(...),
+    body_font: str = Form(...),
+    primary_color: str = Form(...),
+    secondary_color: str = Form(...),
+    background_color: str = Form(...),
+    text_color: str = Form(...),
+    csrf_token: str = Form(...),
+    user = Depends(require_auth)
+):
+    """Save theme settings"""
+    verify_csrf_token(request, csrf_token)
+    
+    config_path = Path("config.yaml")
+    if config_path.exists():
+        import yaml
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config = yaml.safe_load(f)
+            
+        if 'site' not in config:
+            config['site'] = {}
+            
+        config['site']['theme_settings'] = {
+            'heading_font': heading_font,
+            'body_font': body_font,
+            'primary_color': primary_color,
+            'secondary_color': secondary_color,
+            'background_color': background_color,
+            'text_color': text_color
+        }
+        
+        with open(config_path, 'w', encoding='utf-8') as f:
+            yaml.dump(config, f, default_flow_style=False, sort_keys=False)
+            
+    templates = get_templates()
+    config = get_config() # Reload config
+    
+    tmpl = templates.get_template("cms/settings.html")
+    return tmpl.render(
+        request=request,
+        user=user,
+        site=config.get('site', {}),
+        theme_settings=config.get('site', {}).get('theme_settings', {}),
+        csrf_token=get_csrf_token(request),
+        success_message="Theme settings saved successfully."
+    )

@@ -1,0 +1,145 @@
+{% extends "layouts/base.html" %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cms">
+                            <i class="fas fa-home me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cms/file?path=content/pages/index.md">
+                            <i class="fas fa-file-alt me-2"></i>Pages
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cms/logs">
+                            <i class="fas fa-history me-2"></i>History
+                        </a>
+                    </li>
+                    <li class="nav-item mt-3">
+                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                            <span>Configuration</span>
+                        </h6>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/cms/settings">
+                            <i class="fas fa-cog me-2"></i>Theme Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Theme Settings</h1>
+            </div>
+
+            {% if success_message %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ success_message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Typography & Colors</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="/cms/settings">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                
+                                <h6 class="mb-3 border-bottom pb-2">Typography (Google Fonts)</h6>
+                                
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="heading_font" class="form-label">Heading Font</label>
+                                            <select class="form-select" name="heading_font" id="heading_font">
+                                                <option value="Inter" {% if theme_settings.heading_font == 'Inter' %}selected{% endif %}>Inter</option>
+                                                <option value="Roboto" {% if theme_settings.heading_font == 'Roboto' %}selected{% endif %}>Roboto</option>
+                                                <option value="Playfair Display" {% if theme_settings.heading_font == 'Playfair Display' %}selected{% endif %}>Playfair Display</option>
+                                                <option value="Outfit" {% if theme_settings.heading_font == 'Outfit' %}selected{% endif %}>Outfit</option>
+                                                <option value="Fira Code" {% if theme_settings.heading_font == 'Fira Code' %}selected{% endif %}>Fira Code</option>
+                                                <option value="Open Sans" {% if theme_settings.heading_font == 'Open Sans' %}selected{% endif %}>Open Sans</option>
+                                                <option value="Lora" {% if theme_settings.heading_font == 'Lora' %}selected{% endif %}>Lora</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="body_font" class="form-label">Body Font</label>
+                                            <select class="form-select" name="body_font" id="body_font">
+                                                <option value="Inter" {% if theme_settings.body_font == 'Inter' %}selected{% endif %}>Inter</option>
+                                                <option value="Roboto" {% if theme_settings.body_font == 'Roboto' %}selected{% endif %}>Roboto</option>
+                                                <option value="Playfair Display" {% if theme_settings.body_font == 'Playfair Display' %}selected{% endif %}>Playfair Display</option>
+                                                <option value="Outfit" {% if theme_settings.body_font == 'Outfit' %}selected{% endif %}>Outfit</option>
+                                                <option value="Fira Code" {% if theme_settings.body_font == 'Fira Code' %}selected{% endif %}>Fira Code</option>
+                                                <option value="Open Sans" {% if theme_settings.body_font == 'Open Sans' %}selected{% endif %}>Open Sans</option>
+                                                <option value="Lora" {% if theme_settings.body_font == 'Lora' %}selected{% endif %}>Lora</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h6 class="mb-3 border-bottom pb-2">Color Palette</h6>
+
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <div class="mb-3 d-flex align-items-center">
+                                            <label for="primary_color" class="form-label me-3 mb-0" style="width: 150px;">Primary Color</label>
+                                            <input type="color" class="form-control form-control-color" id="primary_color" name="primary_color" value="{{ theme_settings.primary_color|default('#2C3E50') }}" title="Choose primary color">
+                                        </div>
+                                        <div class="mb-3 d-flex align-items-center">
+                                            <label for="secondary_color" class="form-label me-3 mb-0" style="width: 150px;">Secondary Color</label>
+                                            <input type="color" class="form-control form-control-color" id="secondary_color" name="secondary_color" value="{{ theme_settings.secondary_color|default('#95A5A6') }}" title="Choose secondary color">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3 d-flex align-items-center">
+                                            <label for="background_color" class="form-label me-3 mb-0" style="width: 150px;">Background Color</label>
+                                            <input type="color" class="form-control form-control-color" id="background_color" name="background_color" value="{{ theme_settings.background_color|default('#FFFFFF') }}" title="Choose background color">
+                                        </div>
+                                        <div class="mb-3 d-flex align-items-center">
+                                            <label for="text_color" class="form-label me-3 mb-0" style="width: 150px;">Text Color</label>
+                                            <input type="color" class="form-control form-control-color" id="text_color" name="text_color" value="{{ theme_settings.text_color|default('#212529') }}" title="Choose text color">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-1"></i>Save Settings
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">Live Preview Hint</h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="small text-muted">Saving these settings will immediately apply them to the public site and this CMS dashboard by overriding the base Bootstrap CSS variables.</p>
+                            <p class="small text-muted">The fonts are dynamically loaded from Google Fonts.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
