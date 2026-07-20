@@ -61,6 +61,23 @@
                                 
                                 <h6 class="mb-3 border-bottom pb-2">Typography (Google Fonts)</h6>
                                 
+                                <div class="mb-3">
+                                    <label for="font_preset" class="form-label">Font Combination Preset</label>
+                                    <select class="form-select" id="font_preset">
+                                        <option value="custom">Custom</option>
+                                        <option value="preset1">Classic Elegance (Playfair Display / Merriweather)</option>
+                                        <option value="preset2">Modern Clarity (Montserrat / Roboto)</option>
+                                        <option value="preset3">Minimalist Bold (Oswald / Open Sans)</option>
+                                        <option value="preset4">Creative Contrast (Abril Fatface / Lato)</option>
+                                        <option value="preset5">Professional Clean (Inter / Inter)</option>
+                                        <option value="preset6">Tech Forward (Fira Code / Open Sans)</option>
+                                        <option value="preset7">Friendly Tech (Poppins / Roboto)</option>
+                                        <option value="preset8">Editorial (Cormorant Garamond / Lora)</option>
+                                        <option value="preset9">Warm Modern (Outfit / Outfit)</option>
+                                        <option value="preset10">Approachable (Lora / Lato)</option>
+                                    </select>
+                                </div>
+                                
                                 <div class="row mb-4">
                                     <div class="col-md-6">
                                         <div class="mb-3">
@@ -73,6 +90,13 @@
                                                 <option value="Fira Code" {% if theme_settings.heading_font == 'Fira Code' %}selected{% endif %}>Fira Code</option>
                                                 <option value="Open Sans" {% if theme_settings.heading_font == 'Open Sans' %}selected{% endif %}>Open Sans</option>
                                                 <option value="Lora" {% if theme_settings.heading_font == 'Lora' %}selected{% endif %}>Lora</option>
+                                                <option value="Montserrat" {% if theme_settings.heading_font == 'Montserrat' %}selected{% endif %}>Montserrat</option>
+                                                <option value="Oswald" {% if theme_settings.heading_font == 'Oswald' %}selected{% endif %}>Oswald</option>
+                                                <option value="Abril Fatface" {% if theme_settings.heading_font == 'Abril Fatface' %}selected{% endif %}>Abril Fatface</option>
+                                                <option value="Lato" {% if theme_settings.heading_font == 'Lato' %}selected{% endif %}>Lato</option>
+                                                <option value="Poppins" {% if theme_settings.heading_font == 'Poppins' %}selected{% endif %}>Poppins</option>
+                                                <option value="Cormorant Garamond" {% if theme_settings.heading_font == 'Cormorant Garamond' %}selected{% endif %}>Cormorant Garamond</option>
+                                                <option value="Merriweather" {% if theme_settings.heading_font == 'Merriweather' %}selected{% endif %}>Merriweather</option>
                                             </select>
                                         </div>
                                     </div>
@@ -87,12 +111,36 @@
                                                 <option value="Fira Code" {% if theme_settings.body_font == 'Fira Code' %}selected{% endif %}>Fira Code</option>
                                                 <option value="Open Sans" {% if theme_settings.body_font == 'Open Sans' %}selected{% endif %}>Open Sans</option>
                                                 <option value="Lora" {% if theme_settings.body_font == 'Lora' %}selected{% endif %}>Lora</option>
+                                                <option value="Montserrat" {% if theme_settings.body_font == 'Montserrat' %}selected{% endif %}>Montserrat</option>
+                                                <option value="Oswald" {% if theme_settings.body_font == 'Oswald' %}selected{% endif %}>Oswald</option>
+                                                <option value="Abril Fatface" {% if theme_settings.body_font == 'Abril Fatface' %}selected{% endif %}>Abril Fatface</option>
+                                                <option value="Lato" {% if theme_settings.body_font == 'Lato' %}selected{% endif %}>Lato</option>
+                                                <option value="Poppins" {% if theme_settings.body_font == 'Poppins' %}selected{% endif %}>Poppins</option>
+                                                <option value="Cormorant Garamond" {% if theme_settings.body_font == 'Cormorant Garamond' %}selected{% endif %}>Cormorant Garamond</option>
+                                                <option value="Merriweather" {% if theme_settings.body_font == 'Merriweather' %}selected{% endif %}>Merriweather</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
 
                                 <h6 class="mb-3 border-bottom pb-2">Color Palette</h6>
+
+                                <div class="mb-3">
+                                    <label for="color_preset" class="form-label">Color Palette Preset</label>
+                                    <select class="form-select" id="color_preset">
+                                        <option value="custom">Custom</option>
+                                        <option value="preset1">Airy Mineral Neutrals</option>
+                                        <option value="preset2">Grounded Earth</option>
+                                        <option value="preset3">Futuristic Neon</option>
+                                        <option value="preset4">Cyberpunk Glow</option>
+                                        <option value="preset5">Walnut Retro</option>
+                                        <option value="preset6">70s Vintage</option>
+                                        <option value="preset7">Muted Pastel Pops</option>
+                                        <option value="preset8">Jewel-Tone Opulence</option>
+                                        <option value="preset9">Modern SaaS</option>
+                                        <option value="preset10">Dark Minimalist</option>
+                                    </select>
+                                </div>
 
                                 <div class="row mb-4">
                                     <div class="col-md-6">
@@ -142,4 +190,99 @@
         </main>
     </div>
 </div>
+
+<script>
+    const colorPresets = {
+        'preset1': { primary: '#C4B5A5', secondary: '#E6E1DC', background: '#F9F7F5', text: '#4A4441' },
+        'preset2': { primary: '#8B5A2B', secondary: '#CDAA7D', background: '#FDF5E6', text: '#3E2723' },
+        'preset3': { primary: '#00FFCC', secondary: '#7B2CBF', background: '#0F172A', text: '#F8FAFC' },
+        'preset4': { primary: '#FF003C', secondary: '#00F0FF', background: '#121212', text: '#E0E0E0' },
+        'preset5': { primary: '#6D4C41', secondary: '#D7CCC8', background: '#EFEBE9', text: '#212121' },
+        'preset6': { primary: '#D35400', secondary: '#F39C12', background: '#FDF2E9', text: '#5D4037' },
+        'preset7': { primary: '#FFB6C1', secondary: '#ADD8E6', background: '#FFF5EE', text: '#2F4F4F' },
+        'preset8': { primary: '#006400', secondary: '#4B0082', background: '#F0F8FF', text: '#191970' },
+        'preset9': { primary: '#2563EB', secondary: '#94A3B8', background: '#F8FAFC', text: '#1E293B' },
+        'preset10': { primary: '#F3F4F6', secondary: '#9CA3AF', background: '#111827', text: '#F9FAFB' }
+    };
+
+    const fontPresets = {
+        'preset1': { heading: 'Playfair Display', body: 'Merriweather' },
+        'preset2': { heading: 'Montserrat', body: 'Roboto' },
+        'preset3': { heading: 'Oswald', body: 'Open Sans' },
+        'preset4': { heading: 'Abril Fatface', body: 'Lato' },
+        'preset5': { heading: 'Inter', body: 'Inter' },
+        'preset6': { heading: 'Fira Code', body: 'Open Sans' },
+        'preset7': { heading: 'Poppins', body: 'Roboto' },
+        'preset8': { heading: 'Cormorant Garamond', body: 'Lora' },
+        'preset9': { heading: 'Outfit', body: 'Outfit' },
+        'preset10': { heading: 'Lora', body: 'Lato' }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const colorSelect = document.getElementById('color_preset');
+        const primaryColor = document.getElementById('primary_color');
+        const secondaryColor = document.getElementById('secondary_color');
+        const backgroundColor = document.getElementById('background_color');
+        const textColor = document.getElementById('text_color');
+        
+        const fontSelect = document.getElementById('font_preset');
+        const headingFont = document.getElementById('heading_font');
+        const bodyFont = document.getElementById('body_font');
+
+        function checkColorPreset() {
+            let found = 'custom';
+            for (const [key, colors] of Object.entries(colorPresets)) {
+                if (colors.primary.toUpperCase() === primaryColor.value.toUpperCase() &&
+                    colors.secondary.toUpperCase() === secondaryColor.value.toUpperCase() &&
+                    colors.background.toUpperCase() === backgroundColor.value.toUpperCase() &&
+                    colors.text.toUpperCase() === textColor.value.toUpperCase()) {
+                    found = key;
+                    break;
+                }
+            }
+            colorSelect.value = found;
+        }
+
+        function checkFontPreset() {
+            let found = 'custom';
+            for (const [key, fonts] of Object.entries(fontPresets)) {
+                if (fonts.heading === headingFont.value && fonts.body === bodyFont.value) {
+                    found = key;
+                    break;
+                }
+            }
+            fontSelect.value = found;
+        }
+
+        colorSelect.addEventListener('change', function() {
+            if (this.value !== 'custom') {
+                const colors = colorPresets[this.value];
+                primaryColor.value = colors.primary;
+                secondaryColor.value = colors.secondary;
+                backgroundColor.value = colors.background;
+                textColor.value = colors.text;
+            }
+        });
+
+        fontSelect.addEventListener('change', function() {
+            if (this.value !== 'custom') {
+                const fonts = fontPresets[this.value];
+                headingFont.value = fonts.heading;
+                bodyFont.value = fonts.body;
+            }
+        });
+
+        [primaryColor, secondaryColor, backgroundColor, textColor].forEach(el => {
+            el.addEventListener('input', checkColorPreset);
+        });
+
+        [headingFont, bodyFont].forEach(el => {
+            el.addEventListener('change', checkFontPreset);
+        });
+
+        // Initial check on load
+        checkColorPreset();
+        checkFontPreset();
+    });
+</script>
 {% endblock %}
