@@ -95,9 +95,12 @@ async def logout(request: Request):
     request.session.clear()
     return RedirectResponse(url="/", status_code=302)
 
+from app.apps_router import router as apps_router
+
 # Include routers (public router last because it has catch-all route)
 app.include_router(forms_router, prefix="/api/forms")
 app.include_router(cms_router)
+app.include_router(apps_router)
 app.include_router(public_router)
 
 if __name__ == "__main__":
